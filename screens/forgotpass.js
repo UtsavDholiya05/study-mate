@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-const LoginScreen = ({ navigation }) => {
+const ForgotPass = ({ navigation }) => {
   return (
     <View
       style={{
@@ -12,20 +13,29 @@ const LoginScreen = ({ navigation }) => {
         paddingHorizontal: 20,
       }}
     >
-      {/* App Name */}
-      <View style={{ position: "absolute", top: 60, right: 10 }}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <Text
-            style={{
-              fontSize: 32,
-              fontWeight: "300",
-              color: "#000000",
-            }}
-          >
-            StudySmart
-          </Text>
-        </View>
+      {/* Header Container for Back Arrow and App Name */}
+      <View
+        style={{
+          position: "absolute",
+          top: 60,
+          left: 0,
+          right: 0,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 20,
+        }}
+      >
+        {/* Back Arrow */}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()} // Navigates back to Login Screen
+          style={{ flexDirection: "row", alignItems: "center" }}
+        >
+          <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+          <Text style={{ fontSize: 16, color: "black" }}>Back</Text>
+        </TouchableOpacity>
       </View>
+
       {/* White Box Container */}
       <View
         style={{
@@ -50,7 +60,7 @@ const LoginScreen = ({ navigation }) => {
               marginBottom: 5,
             }}
           >
-            Welcome Back!
+            Forgot Password?
           </Text>
 
           <Text
@@ -61,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
               marginBottom: 20,
             }}
           >
-            lets get started
+            we got you!
           </Text>
         </View>
 
@@ -82,32 +92,9 @@ const LoginScreen = ({ navigation }) => {
               }}
             />
           </View>
-
-          <View style={{ width: "100%", marginBottom: 5 }}>
-            <Text style={{ marginLeft: 15, color: "#000000" }}>Password</Text>
-            <TextInput
-              placeholder="Enter your password"
-              placeholderTextColor="#666"
-              secureTextEntry
-              style={{
-                width: "100%",
-                padding: 15,
-                borderWidth: 1,
-                borderColor: "#000000",
-                borderRadius: 40,
-                backgroundColor: "white",
-                marginBottom: 10,
-              }}
-            />
-          </View>
-
-          {/* Forgot Password */}
-          <TouchableOpacity style={{ alignSelf: "flex-end" }}  onPress={() => navigation.navigate("Forgotpass")}>
-            <Text style={{ color: "#566D67" }}>Forgot Password?</Text>
-          </TouchableOpacity>
         </View>
 
-        {/* Login Button */}
+        {/* Send Code Button */}
         <View style={{ paddingHorizontal: 80, width: "100%" }}>
           <TouchableOpacity
             style={{
@@ -117,23 +104,9 @@ const LoginScreen = ({ navigation }) => {
               alignItems: "center",
               width: "100%",
             }}
+            onPress={()=>navigation.navigate("Otp")}
           >
-            <Text style={{ color: "white", fontSize: 18 }}>Login</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 15,
-          }}
-        >
-          <Text style={{ color: "#555" }}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-            <Text style={{ color: "#566D67", fontWeight: "bold" }}>
-              Sign Up
-            </Text>
+            <Text style={{ color: "white", fontSize: 18 }}>Send code</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -141,4 +114,4 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
-export default LoginScreen;
+export default ForgotPass;
