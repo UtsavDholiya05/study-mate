@@ -1,16 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from "react-native"
 
 export default function App() {
-    const renderMenuItem = (title, customStyle = {}) => (
-        <View style={[styles.menuItem, customStyle]}>
-          <Text style={styles.menuItemTitle}>{title}</Text>
-          <TouchableOpacity style={styles.getStartedButton}>
-            <Text style={styles.getStartedText}>Get Started</Text>
-          </TouchableOpacity>
-        </View>
-      );
-      
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -39,16 +29,43 @@ export default function App() {
         {/* Menu Grid */}
         <View style={styles.menuGrid}>
           <View style={styles.menuRow}>
-            {renderMenuItem("Join a meeting")}
-            {renderMenuItem("EduShorts",styles.edushortsItem)}
+            <View style={[styles.menuItem1, styles.meet]}>
+              <Text style={styles.menuItemTitle}>Join a meeting</Text>
+              <TouchableOpacity style={styles.getStartedButton}>
+                <Text style={styles.getStartedText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.menuItem, styles.edushortsItem]}>
+              <Text style={styles.menuItemTitle}>EduShorts</Text>
+              <TouchableOpacity style={styles.getStartedButton}>
+                <Text style={styles.getStartedText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
           <View style={styles.menuRow}>
-            {renderMenuItem("Study Groups")}
-            {renderMenuItem("Notes",styles.notes)}
+            <View style={styles.menuItem}>
+              <Text style={styles.menuItemTitle}>Study Groups</Text>
+              <TouchableOpacity style={styles.getStartedButton}>
+                <Text style={styles.getStartedText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.menuItem, styles.notes]}>
+              <Text style={styles.menuItemTitle}>Notes</Text>
+              <TouchableOpacity style={styles.getStartedButton}>
+                <Text style={styles.getStartedText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
           <View style={styles.menuRow1}>
-            {renderMenuItem("Join a meeting")}
-            <View style={[styles.emptyItem]} />
+            <View style={styles.menuItem}>
+              <Text style={styles.menuItemTitle}>Join a meeting</Text>
+              <TouchableOpacity style={styles.getStartedButton}>
+                <Text style={styles.getStartedText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.emptyItem} />
           </View>
         </View>
       </View>
@@ -59,7 +76,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f2e3", // Cream/beige background
+    backgroundColor: "#FFFFF1", // Cream/beige background
   },
   header: {
     backgroundColor: "#000",
@@ -175,6 +192,19 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  menuItem1: {
+    flex: 1,
+    backgroundColor: "#9CA37C",
+    // borderRadius: 0,
+    padding: 20,
+    // marginHorizontal: 5,
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
   emptyItem: {
     backgroundColor: "transparent",
     shadowOpacity: 0,
@@ -185,11 +215,17 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#000",
   },
+  menuItemTitle1: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#9CA37C",
+  },
   getStartedButton: {
     backgroundColor: "#a3b18a", // Sage green color
     alignSelf: "flex-start",
     paddingVertical: 8,
     paddingHorizontal: 15,
+    // marginBottom: 0,
     borderRadius: 20,
   },
   getStartedText: {
@@ -203,7 +239,10 @@ const styles = StyleSheet.create({
   },
   notes: {
     borderColor:"black",
-    borderLeftWidth: 3,
+    borderLeftWidth: 4,
   },
+  meet:{
+    color:"#9CA37C"
+  }
 })
 
