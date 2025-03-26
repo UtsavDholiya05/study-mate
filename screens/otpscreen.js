@@ -1,10 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const OtpScreen = ({ navigation }) => {
@@ -54,7 +49,15 @@ const OtpScreen = ({ navigation }) => {
           style={{ flexDirection: "row", alignItems: "center" }}
         >
           <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          <Text style={{ fontSize: 16, color: "black" }}>Back</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              color: "black",
+              fontFamily: "Inconsolata_400Regular",
+            }}
+          >
+            Back
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -73,10 +76,27 @@ const OtpScreen = ({ navigation }) => {
         }}
       >
         <View style={{ alignItems: "center", marginBottom: 10 }}>
-          <Text style={{ fontSize: 32, fontWeight: "300", color: "#333", textAlign: "center", marginBottom: 5 }}>
+          <Text
+            style={{
+              fontSize: 32,
+              fontWeight: "bold",
+              color: "#333",
+              textAlign: "center",
+              marginBottom: 5,
+              fontFamily: "PlayfairDisplay_400Regular",
+            }}
+          >
             Enter OTP
           </Text>
-          <Text style={{ fontSize: 14, color: "#666", textAlign: "center", marginBottom: 20 }}>
+          <Text
+            style={{
+              fontSize: 14,
+              color: "#666",
+              textAlign: "center",
+              marginBottom: 20,
+              fontFamily: "Inconsolata_400Regular",
+            }}
+          >
             We sent a 6-digit verification code to your phone number
           </Text>
         </View>
@@ -97,6 +117,8 @@ const OtpScreen = ({ navigation }) => {
                 fontSize: 24,
                 backgroundColor: "#FFF",
                 marginHorizontal: 5,
+                fontFamily: "Inconsolata_400Regular",
+                color: "#000",
               }}
               keyboardType="numeric"
               maxLength={1}
@@ -122,15 +144,34 @@ const OtpScreen = ({ navigation }) => {
               width: "100%",
             }}
           >
-            <Text style={{ color: "white", fontSize: 18 }}>Verify</Text>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 18,
+                fontFamily: "Inconsolata_400Regular",
+              }}
+            >
+              Verify
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* Resend OTP */}
         <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 15 }}>
-          <Text style={{ color: "#555" }}>Didn’t receive code? </Text>
+          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
+            Didn’t receive code?{" "}
+          </Text>
           <TouchableOpacity>
-            <Text style={{ color: "#566D67", fontWeight: "bold" }}>Resend</Text>
+            <Text
+              style={{
+                color: "#566D67",
+                fontWeight: "bold",
+                fontFamily: "Inconsolata_400Regular",
+                textDecorationLine: "underline",
+              }}
+            >
+              Resend
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
