@@ -76,7 +76,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFF1", // Cream/beige background
+    backgroundColor: "#FFFFF1",
   },
   header: {
     backgroundColor: "#000",
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     color: "#9CA37C",
   },
   getStartedButton: {
-    backgroundColor: "#a3b18a", // Sage green color
+    backgroundColor: "#a3b18a", 
     alignSelf: "flex-start",
     paddingVertical: 8,
     paddingHorizontal: 15,
