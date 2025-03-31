@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  const [fontsLoaded] = useFonts({ Kanit_400Regular, Inconsolata_400Regular, PlayfairDisplay_400Regular  });
+  const [fontsLoaded] = useFonts({ Kanit_400Regular, Inconsolata_400Regular, PlayfairDisplay_400Regular });
 
   useEffect(() => {
     if (fontsLoaded) {
