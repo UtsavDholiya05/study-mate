@@ -150,6 +150,7 @@ const LoginScreen = ({ navigation }) => {
         {/* Login Button */}
         <View style={{ paddingHorizontal: 80, width: "100%" }}>
           <TouchableOpacity
+          onPress={() => navigation.navigate("Homescreen")}
             style={{
               backgroundColor: "#000000",
               padding: 15,

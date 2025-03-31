@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  const [fontsLoaded] = useFonts({ Kanit_400Regular, Inconsolata_400Regular, PlayfairDisplay_400Regular  });
+  const [fontsLoaded] = useFonts({ Kanit_400Regular, Inconsolata_400Regular, PlayfairDisplay_400Regular });
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -32,7 +32,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Homescreen">
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Forgotpass" component={ForgotPass} />

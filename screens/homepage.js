@@ -3,25 +3,28 @@ import {
   Text,
   View,
   TouchableOpacity,
-  StatusBar,
+  Dimensions,
   Image,
+  StatusBar,
 } from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 export default function App() {
   return (
     <View style={styles.container}>
-      {/* <StatusBar barStyle="light-content" /> */}
+      <StatusBar barStyle="light-content" />
 
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>StudySmart</Text>
-        <View style={styles.headerIcons}>
+        {/* <View style={styles.headerIcons}>
           <Image
             // source={require("../assets/account_circle (3).jpg")}
             // style={styles.icon}
           />
           <Text style={styles.username}>hello, nya</Text>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.content}>
@@ -98,16 +101,15 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#000",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    paddingVertical: height * 0.04,
+    paddingHorizontal: width * 0.05,
+    alignItems: "center", 
   },
   headerTitle: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: "500",
+    marginTop:10
   },
   headerIcons: {
     flexDirection: "row",
