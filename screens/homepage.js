@@ -18,8 +18,8 @@ export default function App() {
         <Text style={styles.headerTitle}>StudySmart</Text>
         <View style={styles.headerIcons}>
           <Image
-            source={require("../assets/account_circle (3).jpg")}
-            style={styles.icon}
+            // source={require("../assets/account_circle (3).jpg")}
+            // style={styles.icon}
           />
           <Text style={styles.username}>hello, nya</Text>
         </View>
