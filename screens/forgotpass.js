@@ -1,50 +1,40 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  useWindowDimensions,
+} from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const ForgotPass = ({ navigation }) => {
+  const { width, height } = useWindowDimensions();
+
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: "#FFFFF1",
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 20,
+        paddingHorizontal: width * 0.05,
       }}
     >
-      {/* Header Container for Back Arrow and App Name */}
-      <View
-        style={{
-          position: "absolute",
-          top: 60,
-          left: 20,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        {/* Back Arrow */}
-        <TouchableOpacity
-          onPress={() => navigation.goBack()} // Navigates back to Login Screen
-          style={{ flexDirection: "row", alignItems: "center" }}
-        >
+      {/* Header */}
+      <View style={{ position: "absolute", top: height * 0.08, left: width * 0.05 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          <Text
-            style={{
-              fontSize: 16,
-              color: "black",
-              fontFamily: "Inconsolata_400Regular",
-            }}
-          >
-            Back
-          </Text>
+          <Text style={{ fontSize: 16, color: "black", fontFamily: "Inconsolata_400Regular" }}>Back</Text>
         </TouchableOpacity>
       </View>
 
-      {/* White Box Container */}
+      {/* Forgot Password Box */}
       <View
         style={{
-          width: "100%",
+          width: "90%",
+          maxWidth: 400,
           backgroundColor: "#FFFFFF",
           borderRadius: 20,
           padding: 20,
@@ -52,48 +42,19 @@ const ForgotPass = ({ navigation }) => {
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.4,
           shadowRadius: 4,
-          elevation: 5, // Shadow for Android
+          elevation: 5,
         }}
       >
-        <View style={{ alignItems: "center", marginBottom: 10 }}>
-          <Text
-            style={{
-              fontSize: 32,
-              fontWeight: "bold",
-              color: "#333",
-              textAlign: "center",
-              marginBottom: 5,
-              fontFamily: "PlayfairDisplay_400Regular",
-            }}
-          >
-            Forgot Password?
-          </Text>
-
-          <Text
-            style={{
-              fontSize: 14,
-              color: "#666",
-              textAlign: "center",
-              marginBottom: 20,
-              fontFamily: "Inconsolata_400Regular",
-            }}
-          >
-            We got you!
-          </Text>
-        </View>
+        <Text style={{ fontSize: 32, fontWeight: "bold", textAlign: "center", marginBottom: 5, fontFamily: "PlayfairDisplay_400Regular" }}>
+          Forgot Password?
+        </Text>
+        <Text style={{ fontSize: 14, color: "#666", textAlign: "center", marginBottom: 20, fontFamily: "Inconsolata_400Regular" }}>
+          we got you!
+        </Text>
 
         {/* Email Input Field */}
         <View style={{ width: "100%", marginBottom: 10 }}>
-          <Text
-            style={{
-              marginLeft: 15,
-              color: "#000000",
-              fontFamily: "Inconsolata_400Regular",
-              marginBottom: 5,
-            }}
-          >
-            Email
-          </Text>
+          <Text style={{ marginLeft: 15, color: "#000000", fontFamily: "Inconsolata_400Regular", marginBottom: 5 }}>Email</Text>
           <TextInput
             placeholder="Enter your email"
             placeholderTextColor="#666"
@@ -107,35 +68,26 @@ const ForgotPass = ({ navigation }) => {
               fontSize: 16,
               fontFamily: "Inconsolata_400Regular",
               color: "#000",
+              marginBottom:5,
             }}
           />
         </View>
 
         {/* Send Code Button */}
-        <View style={{ paddingHorizontal: 80, width: "100%" }}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#000000",
-              padding: 15,
-              borderRadius: 40,
-              alignItems: "center",
-              width: "100%",
-            }}
-            onPress={() => navigation.navigate("Otp")}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 18,
-                fontFamily: "Inconsolata_400Regular",
-              }}
-            >
-              Send Code
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#000000",
+            padding: 15,
+            borderRadius: 40,
+            alignItems: "center",
+            width: "100%",
+          }}
+          onPress={() => navigation.navigate("Otp")}
+        >
+          <Text style={{ color: "white", fontSize: 18, fontFamily: "Inconsolata_400Regular" }}>Send Code</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
