@@ -3,28 +3,25 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
-  Image,
   StatusBar,
+  Image,
 } from "react-native";
-
-const { width, height } = Dimensions.get("window");
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      {/* <StatusBar barStyle="light-content" /> */}
 
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>StudySmart</Text>
-        {/* <View style={styles.headerIcons}>
-          <Image
-            // source={require("../assets/account_circle (3).jpg")}
-            // style={styles.icon}
-          />
+        <View style={styles.headerIcons}>
+          {/* <Image
+            source={require("../assets/account_circle (3).jpg")}
+            style={styles.icon}
+          /> */}
           <Text style={styles.username}>hello, nya</Text>
-        </View> */}
+        </View>
       </View>
 
       <View style={styles.content}>
@@ -35,10 +32,11 @@ export default function App() {
             <View style={styles.speechBubble}>
               <Text style={styles.speechText}>info</Text>
             </View>
-          </View>
-          <Text style={styles.welcomeText}>
+            <Text style={styles.welcomeText}>
             Your desk is all set{"\n"}Let's get stuff done
           </Text>
+          </View>
+          
         </View>
 
         {/* Menu Grid */}
@@ -97,19 +95,20 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFF1",
+    backgroundColor: "black",
   },
   header: {
     backgroundColor: "#000",
-    paddingVertical: height * 0.04,
-    paddingHorizontal: width * 0.05,
-    alignItems: "center", 
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   headerTitle: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: "500",
-    marginTop:10
   },
   headerIcons: {
     flexDirection: "row",
@@ -135,6 +134,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    color:"#FFFFF1"
     // paddingHorizontal: 15,
     // paddingTop: 10,
   },
@@ -152,6 +152,9 @@ const styles = StyleSheet.create({
   homeTitleContainer: {
     flexDirection: "row",
     alignItems: "flex-start",
+    backgroundColor: "#FFFFF1",
+    width:"100%",
+
   },
   homeTitle: {
     fontSize: 60,
@@ -174,10 +177,10 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 14,
     // textAlign: "right",
-    paddingRight: 5,
+    paddingHorizontal: "12%",
     color: "#555",
     marginTop: 110,
-    // maxWidth: "50%",
+
   },
   menuGrid: {
     flex: 1,
