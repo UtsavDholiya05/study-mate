@@ -11,6 +11,8 @@ import ForgotPass from "./screens/forgotpass";
 import OtpScreen from "./screens/otpscreen";
 import homepage from "./screens/homepage";
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
+import { Inter_400Regular } from "@expo-google-fonts/inter";
+
 
 const Stack = createStackNavigator();
 
@@ -18,7 +20,7 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  const [fontsLoaded] = useFonts({ Kanit_400Regular, Inconsolata_400Regular, PlayfairDisplay_400Regular });
+  const [fontsLoaded] = useFonts({ Kanit_400Regular, Inconsolata_400Regular, PlayfairDisplay_400Regular, Inter_400Regular});
 
   useEffect(() => {
     if (fontsLoaded) {
