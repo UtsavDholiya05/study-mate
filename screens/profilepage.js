@@ -21,6 +21,7 @@ const ProfileScreen = () => {
         paddingVertical: height * 0.015,
         borderBottomWidth: 1,
         borderBottomColor: "#eee",
+        top: -height * 0.045,
       }}
     >
       <Text style={{ color: "#666", fontSize: width * 0.04 }}>{label}</Text>
@@ -73,7 +74,7 @@ const ProfileScreen = () => {
       />
 
       {/* Profile Card */}
-      <View>
+      <View >
         <View
           style={{
             height: height * 0.85,
@@ -122,12 +123,14 @@ const ProfileScreen = () => {
             </TouchableOpacity>
           </View>
 
+
           {/* Profile Info */}
           <Text
             style={{
               fontSize: width * 0.06,
               fontWeight: "bold",
-              textAlign: "center",
+              top: -height * 0.045,
+              // textAlign: "center",
               marginBottom: height * 0.02,
             }}
           >
@@ -138,6 +141,8 @@ const ProfileScreen = () => {
               fontSize: width * 0.05,
               fontWeight: "500",
               marginBottom: height * 0.02,
+              top: -height * 0.045,
+
             }}
           >
             Basic info
