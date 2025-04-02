@@ -5,10 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get("window"); // Get device width
 
-const Homepage = () => {
+  const Homepage = () => {
+    const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: "#000" }}>
       <StatusBar backgroundColor="#000" />
@@ -77,6 +79,8 @@ const Homepage = () => {
               top: 10,
               right: 10,
             }}
+            onPress={() => navigation.navigate("profilepage")}
+
           >
             <Ionicons
               name="person-circle"
@@ -213,6 +217,7 @@ const Homepage = () => {
               elevation: 5,
               justifyContent: "space-between",
             }}
+            onPress={() => navigation.navigate("mygroups")}
           >
             <Ionicons name="people" size={width * 0.1} color="#000" />
             <Text

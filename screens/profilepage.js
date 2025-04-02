@@ -8,7 +8,7 @@ import {
   StatusBar,
   Dimensions,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Ionicons,Feather } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -25,14 +25,7 @@ const ProfileScreen = () => {
       }}
     >
       <Text style={{ color: "#666", fontSize: width * 0.04 }}>{label}</Text>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ fontSize: width * 0.04, marginRight: width * 0.02 }}>
-          {label === "Change password" ? "••••••••" : value}
-        </Text>
-        <TouchableOpacity>
-          <Feather name="edit-2" size={width * 0.04} color="#888" />
-        </TouchableOpacity>
-      </View>
+      <Text style={{ fontSize: width * 0.04 }}>{label === "Change password" ? "••••••••" : value}</Text>
     </View>
   );
 
@@ -43,23 +36,43 @@ const ProfileScreen = () => {
       {/* Header */}
       <View
         style={{
+          backgroundColor: "#000",
+          paddingVertical: width * 0.09,
+          paddingHorizontal: width * 0.05,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: "#000",
-          paddingVertical: height * 0.02,
-          paddingHorizontal: width * 0.05,
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity style={{ padding: width * 0.02 }}>
-          <Feather name="menu" size={width * 0.06} color="white" />
+        <TouchableOpacity onPress={() => console.log("Menu Clicked")}>
+          <Ionicons
+            style={{ transform: [{ translateY: 23 }] }}
+            name="menu"
+            size={width * 0.11}
+            color="#9CA37C"
+          />
         </TouchableOpacity>
-        <Text
-          style={{ color: "white", fontSize: width * 0.05, fontWeight: "500" }}
+
+        <View
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: [{ translateX: -width * 0.13 }, { translateY: 20 }],
+          }}
         >
-          StudySmart
-        </Text>
-        <View style={{ width: width * 0.06 }} />
+          <Text
+            style={{
+              color: "#fff",
+              fontFamily: "PlayfairDisplay_400Regular",
+              fontSize: width * 0.08,
+              fontWeight: "500",
+            }}
+          >
+            StudySmart
+          </Text>
+        </View>
       </View>
 
       <View
@@ -74,7 +87,7 @@ const ProfileScreen = () => {
       />
 
       {/* Profile Card */}
-      <View >
+      <View>
         <View
           style={{
             height: height * 0.85,
@@ -83,7 +96,6 @@ const ProfileScreen = () => {
             padding: width * 0.05,
             paddingTop: height * 0.12,
             borderWidth: width * 0.008,
-            borderRadius: width * 0.02,
           }}
         >
           {/* Profile Image */}
@@ -123,14 +135,12 @@ const ProfileScreen = () => {
             </TouchableOpacity>
           </View>
 
-
           {/* Profile Info */}
           <Text
             style={{
               fontSize: width * 0.06,
               fontWeight: "bold",
-              top: -height * 0.045,
-              // textAlign: "center",
+              top: -height * 0.055,
               marginBottom: height * 0.02,
             }}
           >
@@ -142,7 +152,6 @@ const ProfileScreen = () => {
               fontWeight: "500",
               marginBottom: height * 0.02,
               top: -height * 0.045,
-
             }}
           >
             Basic info
@@ -153,6 +162,20 @@ const ProfileScreen = () => {
           {renderInfoRow("Gender", "Female")}
           {renderInfoRow("Email", "sarahsmiths@gmail.com")}
           {renderInfoRow("Change password", "")}
+
+          {/* Edit Button */}
+          <TouchableOpacity
+            style={{
+              marginTop: height * 0.05,
+              backgroundColor: "#9CA37C",
+              paddingVertical: height * 0.02,
+              borderRadius: width * 0.02,
+              alignItems: "center",
+            }}
+            onPress={() => console.log("Edit Profile Clicked")}
+          >
+            <Text style={{ color: "white", fontSize: width * 0.05, fontWeight: "600" }}>Edit</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
