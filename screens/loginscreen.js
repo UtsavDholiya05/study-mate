@@ -300,7 +300,31 @@ const LoginScreen = ({ navigation }) => {
                 Login
               </Text>
             </TouchableOpacity>
+            <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 15,
+          }}
+        >
+          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
+            Don't have an account?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+            <Text
+              style={{
+                color: "#566D67",
+                fontWeight: "bold",
+                fontFamily: "Inconsolata_400Regular",
+                textDecorationLine: "underline",
+              }}
+            >
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
           </View>
+          
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
