@@ -25,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
   const { width, height } = useWindowDimensions();
 
   const validateEmail = (text) => {
+    console.log("Validating Email:", text); // Log the input for debugging
     setFormData((prev) => ({ ...prev, email: text }));
     if (text === "") {
       setErrors((prev) => ({ ...prev, email: "" }));
@@ -35,18 +36,22 @@ const LoginScreen = ({ navigation }) => {
         email: emailRegex.test(text) ? "" : "Invalid email format",
       }));
     }
+    console.log("Email Validation Errors:", errors.email); // Log validation result
   };
 
   const validatePassword = (text) => {
+    console.log("Validating Password:", text); // Log the input for debugging
     setFormData((prev) => ({ ...prev, password: text }));
     setErrors((prev) => ({
       ...prev,
       password:
         text.length >= 5 ? "" : "Password must be at least 5 characters long",
     }));
+    console.log("Password Validation Errors:", errors.password); // Log validation result
   };
 
   const validateAndLogin = async () => {
+    console.log("Attempting Login with Form Data:", formData); // Log form data before submission
     if (
       !errors.email &&
       !errors.password &&
@@ -54,6 +59,7 @@ const LoginScreen = ({ navigation }) => {
       formData.password
     ) {
       try {
+        console.log("Sending POST request to backend..."); // Log start of API call
         const response = await fetch(`${BASE_URL}/user/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -62,16 +68,37 @@ const LoginScreen = ({ navigation }) => {
             password: formData.password,
           }),
         });
-        const data = await response.json();
+
+        console.log("Response Status:", response.status); // Log HTTP status code
+
+        // Check if the response is valid JSON
+        let responseData;
+        try {
+          responseData = await response.json();
+        } catch (jsonError) {
+          // Fallback to text if JSON parsing fails
+          responseData = await response.text();
+          console.error("Backend Response Text (Not JSON):", responseData);
+        }
+
+        console.log("Backend Response Data:", responseData);
+
         if (response.ok) {
           navigation.navigate("Homescreen");
         } else {
-          alert(data.message || "Login failed");
+          // Display error message from backend or fallback message
+          const errorMessage =
+            typeof responseData === "object"
+              ? responseData.message || "Login failed"
+              : responseData || "Login failed";
+          alert(errorMessage);
         }
       } catch (error) {
+        console.error("Network Error:", error); // Log network error details
         alert("Network error. Please try again.");
       }
     } else {
+      console.log("Validation Errors Preventing Login:", errors); // Log validation errors
       alert("Please fix the errors before logging in.");
     }
   };
