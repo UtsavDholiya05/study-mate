@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
     setErrors((prev) => ({
       ...prev,
       password:
-        text.length >= 5 ? "" : "Password must be at least 5 characters long",
+        text.length >= 5 ? "" : "Password must be at least 8 characters long",
     }));
     console.log("Password Validation Errors:", errors.password); // Log validation result
   };
@@ -134,6 +134,7 @@ const LoginScreen = ({ navigation }) => {
               StudySmart
             </Text>
           </View>
+          
           <View
             style={{
               width: "90%",

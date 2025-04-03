@@ -54,7 +54,7 @@ const SignupScreen = ({ navigation }) => {
     setErrors((prev) => ({
       ...prev,
       password:
-        text.length >= 5 ? "" : "Password must be at least 5 characters long",
+        text.length >= 5 ? "" : "Password must be at least 8 characters long",
     }));
     console.log("Password Validation Errors:", errors.password); // Log validation result
   };
@@ -91,9 +91,9 @@ const SignupScreen = ({ navigation }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
-  
+
         console.log("Response Status:", response.status); // Log HTTP status code
-  
+
         // Check if the response is valid JSON
         let responseData;
         try {
@@ -103,9 +103,9 @@ const SignupScreen = ({ navigation }) => {
           responseData = await response.text();
           console.error("Backend Response Text (Not JSON):", responseData);
         }
-  
+
         console.log("Backend Response Data:", responseData);
-  
+
         if (response.ok) {
           navigation.navigate("Otp");
         } else {
@@ -141,7 +141,7 @@ const SignupScreen = ({ navigation }) => {
         style={{
           position: "absolute",
           top: height * 0.08,
-          right: width * 0.05,
+          alignSelf: "center",
         }}
       >
         <Text
@@ -149,6 +149,7 @@ const SignupScreen = ({ navigation }) => {
             fontSize: 32,
             fontWeight: "600",
             color: "#000",
+            textAlign: "center",
             fontFamily: "PlayfairDisplay_400Regular",
           }}
         >
