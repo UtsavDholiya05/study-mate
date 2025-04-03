@@ -7,13 +7,93 @@ import {
   SafeAreaView,
   useWindowDimensions,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons"; // Importing Ionicons for eye icons
+
+const BASE_URL = "https://studymate-cirr.onrender.com"; // Updated backend URL
 
 const SignupScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [contact, setContact] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    contact: "",
+  });
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    contact: "",
+  });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // New state for password visibility
   const { width, height } = useWindowDimensions();
+
+  const validateName = (text) => {
+    setFormData((prev) => ({ ...prev, name: text }));
+    setErrors((prev) => ({
+      ...prev,
+      name: text.length >= 3 ? "" : "Name must be at least 3 characters long",
+    }));
+  };
+
+  const validateEmail = (text) => {
+    setFormData((prev) => ({ ...prev, email: text }));
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setErrors((prev) => ({
+      ...prev,
+      email: emailRegex.test(text) ? "" : "Invalid email format",
+    }));
+  };
+
+  const validatePassword = (text) => {
+    setFormData((prev) => ({ ...prev, password: text }));
+    setErrors((prev) => ({
+      ...prev,
+      password:
+        text.length >= 5 ? "" : "Password must be at least 5 characters long",
+    }));
+  };
+
+  const validateContact = (text) => {
+    setFormData((prev) => ({ ...prev, contact: text }));
+    const contactRegex = /^\d{10}$/;
+    setErrors((prev) => ({
+      ...prev,
+      contact: contactRegex.test(text)
+        ? ""
+        : "Contact must be a 10-digit number",
+    }));
+  };
+
+  const handleSignup = async () => {
+    if (
+      !errors.name &&
+      !errors.email &&
+      !errors.password &&
+      !errors.contact &&
+      formData.name &&
+      formData.email &&
+      formData.password &&
+      formData.contact
+    ) {
+      try {
+        const response = await fetch(`${BASE_URL}/user/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          navigation.navigate("Otp");
+        } else {
+          alert(data.message || "Signup failed");
+        }
+      } catch (error) {
+        alert("Network error. Please try again.");
+      }
+    } else {
+      alert("Please fix the errors before signing up.");
+    }
+  };
 
   return (
     <SafeAreaView
@@ -26,8 +106,21 @@ const SignupScreen = ({ navigation }) => {
       }}
     >
       {/* App Name */}
-      <View style={{ position: "absolute", top: height * 0.08, right: width * 0.05 }}>
-        <Text style={{ fontSize: 32, fontWeight: "600", color: "#000", fontFamily:"PlayfairDisplay_400Regular" }}>
+      <View
+        style={{
+          position: "absolute",
+          top: height * 0.08,
+          right: width * 0.05,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: "600",
+            color: "#000",
+            fontFamily: "PlayfairDisplay_400Regular",
+          }}
+        >
           StudySmart
         </Text>
       </View>
@@ -47,18 +140,43 @@ const SignupScreen = ({ navigation }) => {
           elevation: 5,
         }}
       >
-        <Text style={{ fontSize: 32, fontWeight: "bold", textAlign: "center", marginBottom: 5, fontFamily:"PlayfairDisplay_400Regular" }}>
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 5,
+            fontFamily: "PlayfairDisplay_400Regular",
+          }}
+        >
           Create Your Account
         </Text>
-        <Text style={{ fontSize: 14, color: "#666", textAlign: "center", marginBottom: 20, fontFamily:"Inconsolata_400Regular" }}>
+        <Text
+          style={{
+            fontSize: 14,
+            color: "#666",
+            textAlign: "center",
+            marginBottom: 20,
+            fontFamily: "Inconsolata_400Regular",
+          }}
+        >
           let's get started
         </Text>
 
-        {/* Name Input Field */}
-        <Text style={{ marginLeft: 15, color: "#000", marginBottom: 5, fontFamily:"Inconsolata_400Regular" }}>Name</Text>
+        {/* Name Input */}
+        <Text
+          style={{
+            marginLeft: 15,
+            color: "#000",
+            marginBottom: 5,
+            fontFamily: "Inconsolata_400Regular",
+          }}
+        >
+          Name
+        </Text>
         <TextInput
-          value={name}
-          onChangeText={setName}
+          value={formData.name}
+          onChangeText={validateName}
           placeholder="Enter your name"
           placeholderTextColor="#666"
           style={{
@@ -69,15 +187,30 @@ const SignupScreen = ({ navigation }) => {
             borderRadius: 40,
             backgroundColor: "white",
             fontSize: 16,
-            fontFamily:"Inconsolata_400Regular",
+            fontFamily: "Inconsolata_400Regular",
           }}
         />
+        {errors.name ? (
+          <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+            {errors.name}
+          </Text>
+        ) : null}
 
-        {/* Email Input Field */}
-        <Text style={{ marginLeft: 15, color: "#000", marginBottom: 5, marginTop: 10, fontFamily:"Inconsolata_400Regular" }}>Email</Text>
+        {/* Email Input */}
+        <Text
+          style={{
+            marginLeft: 15,
+            color: "#000",
+            marginBottom: 5,
+            marginTop: 10,
+            fontFamily: "Inconsolata_400Regular",
+          }}
+        >
+          Email
+        </Text>
         <TextInput
-          value={email}
-          onChangeText={setEmail}
+          value={formData.email}
+          onChangeText={validateEmail}
           placeholder="Enter your email"
           placeholderTextColor="#666"
           style={{
@@ -88,35 +221,88 @@ const SignupScreen = ({ navigation }) => {
             borderRadius: 40,
             backgroundColor: "white",
             fontSize: 16,
-            fontFamily:"Inconsolata_400Regular",
+            fontFamily: "Inconsolata_400Regular",
           }}
         />
+        {errors.email ? (
+          <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+            {errors.email}
+          </Text>
+        ) : null}
 
-        {/* Password Input Field */}
-        <Text style={{ marginLeft: 15, color: "#000", marginBottom: 5, marginTop: 10, fontFamily:"Inconsolata_400Regular" }}>Password</Text>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          placeholderTextColor="#666"
-          secureTextEntry
+        {/* Password Input */}
+        <Text
           style={{
-            width: "100%",
-            padding: 15,
-            borderWidth: 1,
-            borderColor: "#000",
-            borderRadius: 40,
-            backgroundColor: "white",
-            fontSize: 16,
-            fontFamily:"Inconsolata_400Regular"
+            marginLeft: 15,
+            color: "#000",
+            marginBottom: 5,
+            marginTop: 10,
+            fontFamily: "Inconsolata_400Regular",
           }}
-        />
+        >
+          Password
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          <TextInput
+            value={formData.password}
+            onChangeText={validatePassword}
+            placeholder="Enter your password"
+            placeholderTextColor="#666"
+            secureTextEntry={!isPasswordVisible} // Toggle secureTextEntry based on state
+            style={{
+              width: "100%",
+              padding: 15,
+              borderWidth: 1,
+              borderColor: "#000",
+              borderRadius: 40,
+              backgroundColor: "white",
+              fontSize: 16,
+              fontFamily: "Inconsolata_400Regular",
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible((prev) => !prev)} // Toggle password visibility
+            style={{
+              position: "absolute",
+              right: 15,
+              padding: 10,
+            }}
+          >
+            <Icon
+              name={isPasswordVisible ? "eye-off" : "eye"} // Toggle between eye and eye-off icons
+              size={20}
+              color="#000"
+            />
+          </TouchableOpacity>
+        </View>
+        {errors.password ? (
+          <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+            {errors.password}
+          </Text>
+        ) : null}
 
-        {/* Contact Input Field */}
-        <Text style={{ marginLeft: 15, color: "#000", marginBottom: 5, marginTop: 10, fontFamily:"Inconsolata_400Regular" }}>Contact No.</Text>
+        {/* Contact Input */}
+        <Text
+          style={{
+            marginLeft: 15,
+            color: "#000",
+            marginBottom: 5,
+            marginTop: 10,
+            fontFamily: "Inconsolata_400Regular",
+          }}
+        >
+          Contact No.
+        </Text>
         <TextInput
-          value={contact}
-          onChangeText={setContact}
+          value={formData.contact}
+          onChangeText={validateContact}
           placeholder="Enter your contact"
           placeholderTextColor="#666"
           keyboardType="phone-pad"
@@ -129,13 +315,17 @@ const SignupScreen = ({ navigation }) => {
             borderRadius: 40,
             backgroundColor: "white",
             fontSize: 16,
-            fontFamily:"Inconsolata_400Regular",
+            fontFamily: "Inconsolata_400Regular",
           }}
         />
+        {errors.contact ? (
+          <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+            {errors.contact}
+          </Text>
+        ) : null}
 
-        {/* Signup Button */}
         <TouchableOpacity
-          onPress={() => navigation.navigate("Otp")}
+          onPress={handleSignup}
           style={{
             backgroundColor: "#000",
             padding: 15,
@@ -145,19 +335,16 @@ const SignupScreen = ({ navigation }) => {
             marginVertical: 10,
           }}
         >
-          <Text style={{ color: "white", fontSize: 18, fontFamily:"Inconsolata_400Regular" }}>Sign Up</Text>
-        </TouchableOpacity>
-
-        {/* Login Link */}
-        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
-          <Text style={{ color: "#555", fontFamily:"Inconsolata_400Regular" }}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18,
+              fontFamily: "Inconsolata_400Regular",
+            }}
           >
-            <Text style={{ color: "#566D67", fontWeight: "bold", textDecorationLine: "underline", fontFamily:"Inconsolata_400Regular" }}>
-              Login
-            </Text>
-          </TouchableOpacity>
-        </View>
+            Sign Up
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
