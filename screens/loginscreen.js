@@ -71,20 +71,18 @@ const LoginScreen = ({ navigation }) => {
 
         console.log("Response Status:", response.status); // Log HTTP status code
 
-        // Check if the response is valid JSON
+        // Read the response body only once
         let responseData;
-        try {
+        if (response.headers.get("content-type")?.includes("application/json")) {
           responseData = await response.json();
-        } catch (jsonError) {
-          // Fallback to text if JSON parsing fails
+        } else {
           responseData = await response.text();
-          console.error("Backend Response Text (Not JSON):", responseData);
         }
 
         console.log("Backend Response Data:", responseData);
 
         if (response.ok) {
-          navigation.navigate("Homescreen");
+          navigation.navigate("homepage");
         } else {
           // Display error message from backend or fallback message
           const errorMessage =
