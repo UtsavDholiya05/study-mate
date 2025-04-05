@@ -37,11 +37,11 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="homepage">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Forgotpass" component={ForgotPass} />
-        <Stack.Screen name="Otp" component={OtpScreen} />
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
+        <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="signup" component={SignupScreen} />
+        <Stack.Screen name="forgotpass" component={ForgotPass} />
+        <Stack.Screen name="otp" component={OtpScreen} />
         <Stack.Screen name="homepage" component={homepage} />
         <Stack.Screen name="profilepage" component={profilepage} />
         <Stack.Screen name="mygroups" component={mygroups} />
