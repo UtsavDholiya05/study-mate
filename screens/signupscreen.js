@@ -24,92 +24,88 @@ const SignupScreen = ({ navigation }) => {
     password: "",
     contact: "",
   });
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // New state for password visibility
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { width, height } = useWindowDimensions();
 
   const validateName = (text) => {
-    console.log("Validating Name:", text); // Log the input for debugging
-    setFormData((prev) => ({ ...prev, name: text }));
+    console.log("Validating Username:", text);
+    setFormData((prev) => ({ ...prev, username: text }));
     setErrors((prev) => ({
       ...prev,
-      name: text.length >= 3 ? "" : "Name must be at least 3 characters long",
+      username: text.length >= 4 ? "" : "Username must be at least 4 characters long",
     }));
-    console.log("Name Validation Errors:", errors.name); // Log validation result
+    console.log("Username Validation Errors:", errors.username);
   };
 
   const validateEmail = (text) => {
-    console.log("Validating Email:", text); // Log the input for debugging
+    console.log("Validating Email:", text);
     setFormData((prev) => ({ ...prev, email: text }));
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setErrors((prev) => ({
       ...prev,
       email: emailRegex.test(text) ? "" : "Invalid email format",
     }));
-    console.log("Email Validation Errors:", errors.email); // Log validation result
+    console.log("Email Validation Errors:", errors.email);
   };
 
   const validatePassword = (text) => {
-    console.log("Validating Password:", text); // Log the input for debugging
+    console.log("Validating Password:", text);
     setFormData((prev) => ({ ...prev, password: text }));
     setErrors((prev) => ({
       ...prev,
-      password:
-        text.length >= 5 ? "" : "Password must be at least 8 characters long",
+      password: text.length >= 8 ? "" : "Password must be at least 8 characters long",
     }));
-    console.log("Password Validation Errors:", errors.password); // Log validation result
+    console.log("Password Validation Errors:", errors.password);
   };
 
   const validateContact = (text) => {
-    console.log("Validating Contact:", text); // Log the input for debugging
+    console.log("Validating Contact:", text);
     setFormData((prev) => ({ ...prev, contact: text }));
     const contactRegex = /^\d{10}$/;
     setErrors((prev) => ({
       ...prev,
-      contact: contactRegex.test(text)
-        ? ""
-        : "Contact must be a 10-digit number",
+      contact: contactRegex.test(text) ? "" : "Contact must be a 10-digit number",
     }));
-    console.log("Contact Validation Errors:", errors.contact); // Log validation result
+    console.log("Contact Validation Errors:", errors.contact);
   };
 
   const handleSignup = async () => {
-    console.log("Attempting Signup with Form Data:", formData); // Log form data before submission
+    console.log("Attempting Signup with Form Data:", formData);
+
     if (
-      !errors.name &&
+      !errors.username &&
       !errors.email &&
       !errors.password &&
       !errors.contact &&
-      formData.name &&
+      formData.username &&
       formData.email &&
       formData.password &&
       formData.contact
     ) {
       try {
-        console.log("Sending POST request to backend..."); // Log start of API call
+        console.log("Sending POST request to backend...");
         const response = await fetch(`${BASE_URL}/user/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
 
-        console.log("Response Status:", response.status); // Log HTTP status code
+        console.log("Response Status:", response.status);
 
-        // Check if the response is valid JSON
         let responseData;
-        try {
+        const contentType = response.headers.get("content-type");
+
+        if (contentType && contentType.includes("application/json")) {
           responseData = await response.json();
-        } catch (jsonError) {
-          // Fallback to text if JSON parsing fails
+        } else {
           responseData = await response.text();
-          console.error("Backend Response Text (Not JSON):", responseData);
         }
 
         console.log("Backend Response Data:", responseData);
 
         if (response.ok) {
-          navigation.navigate("Otp");
+          navigation.navigate("otp");
         } else {
-          // Display error message from backend or fallback message
           const errorMessage =
             typeof responseData === "object"
               ? responseData.message || "Signup failed"
@@ -117,12 +113,12 @@ const SignupScreen = ({ navigation }) => {
           alert(errorMessage);
         }
       } catch (error) {
-        console.error("Network Error:", error); // Log network error details
+        console.error("Network Error:", error);
         alert("Network error. Please try again.");
       }
     } else {
-      console.log("Validation Errors Preventing Signup:", errors); // Log validation errors
-      alert("Please fix the errors before signing up.");
+      console.log("Validation Errors Preventing Signup:", errors);
+      alert("Please fill the details before signing up.");
     }
   };
 
@@ -195,7 +191,7 @@ const SignupScreen = ({ navigation }) => {
           let's get started
         </Text>
 
-        {/* Name Input */}
+        {/* Username Input */}
         <Text
           style={{
             marginLeft: 15,
@@ -204,12 +200,12 @@ const SignupScreen = ({ navigation }) => {
             fontFamily: "Inconsolata_400Regular",
           }}
         >
-          Name
+          Username
         </Text>
         <TextInput
-          value={formData.name}
+          value={formData.username}
           onChangeText={validateName}
-          placeholder="Enter your name"
+          placeholder="Enter your username"
           placeholderTextColor="#666"
           style={{
             width: "100%",
@@ -222,9 +218,9 @@ const SignupScreen = ({ navigation }) => {
             fontFamily: "Inconsolata_400Regular",
           }}
         />
-        {errors.name ? (
+        {errors.username ? (
           <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
-            {errors.name}
+            {errors.username}
           </Text>
         ) : null}
 
@@ -287,7 +283,7 @@ const SignupScreen = ({ navigation }) => {
             onChangeText={validatePassword}
             placeholder="Enter your password"
             placeholderTextColor="#666"
-            secureTextEntry={!isPasswordVisible} // Toggle secureTextEntry based on state
+            secureTextEntry={!isPasswordVisible}
             style={{
               width: "100%",
               padding: 15,
@@ -300,7 +296,7 @@ const SignupScreen = ({ navigation }) => {
             }}
           />
           <TouchableOpacity
-            onPress={() => setIsPasswordVisible((prev) => !prev)} // Toggle password visibility
+            onPress={() => setIsPasswordVisible((prev) => !prev)}
             style={{
               position: "absolute",
               right: 15,
@@ -308,7 +304,7 @@ const SignupScreen = ({ navigation }) => {
             }}
           >
             <Icon
-              name={isPasswordVisible ? "eye-off" : "eye"} // Toggle between eye and eye-off icons
+              name={isPasswordVisible ? "eye-off" : "eye"}
               size={20}
               color="#000"
             />
@@ -377,6 +373,29 @@ const SignupScreen = ({ navigation }) => {
             Sign Up
           </Text>
         </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 15,
+          }}
+        >
+          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
+            Already have an account?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("login")}>
+            <Text
+              style={{
+                color: "#566D67",
+                fontWeight: "bold",
+                fontFamily: "Inconsolata_400Regular",
+                textDecorationLine: "underline",
+              }}
+            >
+              Login
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

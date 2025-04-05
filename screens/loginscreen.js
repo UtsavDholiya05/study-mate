@@ -311,7 +311,7 @@ const LoginScreen = ({ navigation }) => {
           <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
             Don't have an account?{" "}
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+          <TouchableOpacity onPress={() => navigation.navigate("signup")}>
             <Text
               style={{
                 color: "#566D67",
