@@ -50,7 +50,7 @@ const { height, width } = Dimensions.get("window"); // Get device width
               fontWeight: "500",
             }}
           >
-            StudySmart
+            StudyMate
           </Text>
         </View>
       </View>
