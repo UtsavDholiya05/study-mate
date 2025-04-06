@@ -12,6 +12,7 @@ import OtpScreen from "./screens/otpscreen";
 import homepage from "./screens/homepage";
 import profilepage from "./screens/profilepage"
 import mygroups from "./screens/mygroups"
+import EditProfilePage from "./screens/editprofilepage";
 import notificationpage from "./screens/notificationpage"
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { Inter_400Regular } from "@expo-google-fonts/inter";
@@ -46,6 +47,7 @@ const App = () => {
         <Stack.Screen name="profilepage" component={profilepage} />
         <Stack.Screen name="mygroups" component={mygroups} />
         <Stack.Screen name="notificationpage" component={notificationpage} />
+        <Stack.Screen name="editprofilepage" component={EditProfilePage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

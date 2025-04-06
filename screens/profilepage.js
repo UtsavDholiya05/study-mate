@@ -9,36 +9,38 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
 
 const ProfilePage = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused(); // 👈 Hook to detect focus
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUserData = async () => {
     try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) throw new Error("Token not found");
-      const response = await axios.get("https://studymate-cirr.onrender.com/user/view", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUserData(response.data.user);
-      setLoading(false);
+      const storedUser = await AsyncStorage.getItem("user");
+      if (!storedUser) throw new Error("User not found");
+      const user = JSON.parse(storedUser);
+      setUserData(user);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
+    } finally {
       setLoading(false);
     }
   };
 
+  // Load data every time the screen comes into focus
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    if (isFocused) {
+      setLoading(true); // show spinner while loading
+      fetchUserData();
+    }
+  }, [isFocused]);
 
   const renderInfoRow = (label, value) => (
     <View
@@ -74,7 +76,7 @@ const ProfilePage = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
 
       {/* Header */}
       <View
@@ -121,7 +123,7 @@ const ProfilePage = () => {
       {/* Banner */}
       <View
         style={{
-          height: height * 0.15,
+          height: height * 0.20,
           backgroundColor: "#b5b88f",
           width: "100%",
           borderColor: "black",
@@ -194,7 +196,7 @@ const ProfilePage = () => {
               marginBottom: height * 0.02,
             }}
           >
-            {userData?.name || "User"}
+            {userData?.username || "User"}
           </Text>
           <Text
             style={{
@@ -206,9 +208,9 @@ const ProfilePage = () => {
             Basic info
           </Text>
 
-          {renderInfoRow("Name", userData?.name || "N/A")}
-          {renderInfoRow("Date of Birth", userData?.dob || "N/A")}
-          {renderInfoRow("Gender", userData?.gender || "N/A")}
+          {renderInfoRow("Name", userData?.username || "N/A")}
+          {renderInfoRow("Contact No", userData?.contact || "N/A")}
+          {/* {renderInfoRow("Gender", userData?.gender || "N/A")} */}
           {renderInfoRow("Email", userData?.email || "N/A")}
           {renderInfoRow("Change password", "")}
 
@@ -220,7 +222,7 @@ const ProfilePage = () => {
               borderRadius: width * 0.02,
               alignItems: "center",
             }}
-            onPress={() => navigation.navigate("editprofile")}
+            onPress={() => navigation.navigate("editprofilepage")}
           >
             <Text
               style={{

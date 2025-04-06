@@ -11,6 +11,7 @@ import {
   ScrollView,
   Platform,
   Keyboard,
+  StatusBar
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -106,6 +107,12 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFF1" }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}

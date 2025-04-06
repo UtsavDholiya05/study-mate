@@ -1,19 +1,29 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { View, Text, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useNavigation } from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window"); // Get device width
 
-  const Homepage = () => {
-    const navigation = useNavigation();
+const Homepage = () => {
+  const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: "#000" }}>
-      <StatusBar backgroundColor="#000" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+
       <View
         style={{
           backgroundColor: "#000",
@@ -80,13 +90,8 @@ const { height, width } = Dimensions.get("window"); // Get device width
               right: 10,
             }}
             onPress={() => navigation.navigate("profilepage")}
-
           >
-            <Ionicons
-              name="person-circle"
-              size={width * 0.12}
-              color="#000"
-            />
+            <Ionicons name="person-circle" size={width * 0.12} color="#000" />
           </TouchableOpacity>
 
           <View style={{ flex: 0, alignSelf: "flex-end" }}>

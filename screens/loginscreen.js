@@ -5,23 +5,121 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
-  useWindowDimensions,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  Alert,
+  useWindowDimensions,
+  StatusBar
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
+
+const BASE_URL = "https://studymate-cirr.onrender.com";
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    secureTextEntry: true,
+  });
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const { width, height } = useWindowDimensions();
+
+  const validateEmail = (text) => {
+    setFormData((prev) => ({ ...prev, email: text }));
+    if (text === "") {
+      setErrors((prev) => ({ ...prev, email: "" }));
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setErrors((prev) => ({
+        ...prev,
+        email: emailRegex.test(text) ? "" : "Invalid email format",
+      }));
+    }
+  };
+
+  const validatePassword = (text) => {
+    setFormData((prev) => ({ ...prev, password: text }));
+    setErrors((prev) => ({
+      ...prev,
+      password:
+        text.length >= 8 ? "" : "Password must be at least 8 characters long",
+    }));
+  };
+
+  const validateAndLogin = async () => {
+    if (
+      !errors.email &&
+      !errors.password &&
+      formData.email &&
+      formData.password
+    ) {
+      try {
+        setLoading(true);
+        console.log("Sending POST request to backend...");
+
+        const response = await fetch(`${BASE_URL}/user/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        console.log("Response Status:", response.status);
+        let responseData;
+        if (
+          response.headers.get("content-type")?.includes("application/json")
+        ) {
+          responseData = await response.json();
+        } else {
+          responseData = await response.text();
+        }
+
+        console.log("Backend Response Data:", responseData);
+
+        if (response.ok) {
+          const user = responseData.details; // ← updated to get the correct user object
+          if (!user) {
+            throw new Error("User data not received from server.");
+          }
+
+          await AsyncStorage.setItem("user", JSON.stringify(user));
+
+          setLoading(false);
+          navigation.navigate("homepage", { user });
+        } else {
+          setLoading(false);
+          const errorMessage =
+            typeof responseData === "object"
+              ? responseData.message || "Login failed"
+              : responseData || "Login failed";
+          Alert.alert("Error", errorMessage);
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error("Network Error:", error);
+        Alert.alert("Error", error.message || "An unexpected error occurred.");
+      }
+    } else {
+      Alert.alert("Error", "Please fix the errors before logging in.");
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFF1" }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -37,23 +135,21 @@ const LoginScreen = ({ navigation }) => {
             }}
             keyboardShouldPersistTaps="handled"
           >
-            {/* App Name */}
             <Text
               style={{
                 fontSize: 32,
                 fontWeight: "600",
                 color: "#000",
-                textAlign: "center", // Center-align the text
-                marginBottom: height * 0.06,
+                textAlign: "center",
+                marginBottom: height * 0.09,
                 fontFamily: "PlayfairDisplay_400Regular",
-                alignSelf: "center", // Center the text horizontally within its parent
-                paddingTop: height * 0.05,
+                alignSelf: "center",
+                marginTop: height * 0.09,
               }}
             >
               StudyMate
             </Text>
 
-            {/* White Box */}
             <View
               style={{
                 width: "95%",
@@ -88,7 +184,7 @@ const LoginScreen = ({ navigation }) => {
                   fontFamily: "Inconsolata_400Regular",
                 }}
               >
-                let's get started
+                Let's get started
               </Text>
 
               {/* Email Field */}
@@ -103,8 +199,8 @@ const LoginScreen = ({ navigation }) => {
                 Email
               </Text>
               <TextInput
-                value={email}
-                onChangeText={setEmail}
+                value={formData.email}
+                onChangeText={validateEmail}
                 placeholder="Enter your email"
                 placeholderTextColor="#666"
                 style={{
@@ -118,6 +214,11 @@ const LoginScreen = ({ navigation }) => {
                   fontFamily: "Inconsolata_400Regular",
                 }}
               />
+              {errors.email ? (
+                <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+                  {errors.email}
+                </Text>
+              ) : null}
 
               {/* Password Field */}
               <Text
@@ -131,25 +232,52 @@ const LoginScreen = ({ navigation }) => {
               >
                 Password
               </Text>
-              <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Enter your password"
-                placeholderTextColor="#666"
-                secureTextEntry
+              <View
                 style={{
-                  width: "100%",
-                  padding: 15,
+                  flexDirection: "row",
+                  alignItems: "center",
                   borderWidth: 1,
                   borderColor: "#000",
                   borderRadius: 40,
                   backgroundColor: "white",
-                  fontSize: 16,
-                  fontFamily: "Inconsolata_400Regular",
+                  paddingRight: 15,
+                  width: "100%",
                 }}
-              />
+              >
+                <TextInput
+                  value={formData.password}
+                  onChangeText={validatePassword}
+                  placeholder="Enter your password"
+                  placeholderTextColor="#666"
+                  secureTextEntry={formData.secureTextEntry}
+                  style={{
+                    flex: 1,
+                    padding: 15,
+                    fontSize: 16,
+                    fontFamily: "Inconsolata_400Regular",
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      secureTextEntry: !prev.secureTextEntry,
+                    }))
+                  }
+                >
+                  <Ionicons
+                    name={formData.secureTextEntry ? "eye-off" : "eye"}
+                    size={24}
+                    color="gray"
+                  />
+                </TouchableOpacity>
+              </View>
+              {errors.password ? (
+                <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+                  {errors.password}
+                </Text>
+              ) : null}
 
-              {/* Forgot Password */}
               <TouchableOpacity
                 style={{ alignSelf: "flex-end", marginVertical: 10 }}
                 onPress={() => navigation.navigate("Forgotpass")}
@@ -165,15 +293,8 @@ const LoginScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
 
-              {/* Login Button */}
               <TouchableOpacity
-                onPress={() => {
-                  setLoading(true);
-                  setTimeout(() => {
-                    setLoading(false);
-                    navigation.navigate("homepage");
-                  }, 2000); // Simulated delay
-                }}
+                onPress={validateAndLogin}
                 style={{
                   backgroundColor: "#000",
                   padding: 15,
@@ -200,7 +321,6 @@ const LoginScreen = ({ navigation }) => {
                 )}
               </TouchableOpacity>
 
-              {/* Signup Prompt */}
               <View
                 style={{
                   flexDirection: "row",
