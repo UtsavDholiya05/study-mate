@@ -10,6 +10,9 @@ import SignupScreen from "./screens/signupscreen";
 import ForgotPass from "./screens/forgotpass";
 import OtpScreen from "./screens/otpscreen";
 import homepage from "./screens/homepage";
+import profilepage from "./screens/profilepage"
+import mygroups from "./screens/mygroups"
+import notificationpage from "./screens/notificationpage"
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { Inter_400Regular } from "@expo-google-fonts/inter";
 
@@ -34,12 +37,15 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Forgotpass" component={ForgotPass} />
-        <Stack.Screen name="Otp" component={OtpScreen} />
-        <Stack.Screen name="Homescreen" component={homepage} />
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
+        <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="signup" component={SignupScreen} />
+        <Stack.Screen name="forgotpass" component={ForgotPass} />
+        <Stack.Screen name="otp" component={OtpScreen} />
+        <Stack.Screen name="homepage" component={homepage} />
+        <Stack.Screen name="profilepage" component={profilepage} />
+        <Stack.Screen name="mygroups" component={mygroups} />
+        <Stack.Screen name="notificationpage" component={notificationpage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
