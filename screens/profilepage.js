@@ -17,7 +17,7 @@ const { height, width } = Dimensions.get("window");
 
 const ProfilePage = () => {
   const navigation = useNavigation();
-  const isFocused = useIsFocused(); // 👈 Hook to detect focus
+  const isFocused = useIsFocused(); 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
