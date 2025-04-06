@@ -228,81 +228,8 @@ const LoginScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
-<<<<<<< HEAD
           </ScrollView>
         </TouchableWithoutFeedback>
-=======
-            {errors.password ? (
-              <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
-                {errors.password}
-              </Text>
-            ) : null}
-
-            {/* Forgot Password */}
-            <TouchableOpacity
-              style={{ alignSelf: "flex-end", marginVertical: 10 }}
-              onPress={() => navigation.navigate("Forgotpass")}
-            >
-              <Text
-                style={{
-                  color: "#566D67",
-                  textDecorationLine: "underline",
-                  fontFamily: "Inconsolata_400Regular",
-                }}
-              >
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
-
-            {/* Login Button */}
-            <TouchableOpacity
-              onPress={validateAndLogin}
-              style={{
-                backgroundColor: "#000",
-                padding: 15,
-                borderRadius: 40,
-                alignItems: "center",
-                width: "100%",
-                marginVertical: 10,
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 18,
-                  fontFamily: "Inconsolata_400Regular",
-                }}
-              >
-                Login
-              </Text>
-            </TouchableOpacity>
-            <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 15,
-          }}
-        >
-          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
-            Don't have an account?{" "}
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-            <Text
-              style={{
-                color: "#566D67",
-                fontWeight: "bold",
-                fontFamily: "Inconsolata_400Regular",
-                textDecorationLine: "underline",
-              }}
-            >
-              Sign Up
-            </Text>
-          </TouchableOpacity>
-        </View>
-          </View>
-          
-        </ScrollView>
->>>>>>> d7c097eb3bbf78b10b2529312a41fff333f0ce8a
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
