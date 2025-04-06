@@ -115,7 +115,7 @@ const ProfilePage = () => {
               fontWeight: "500",
             }}
           >
-            StudySmart
+            StudyMate
           </Text>
         </View>
       </View>
