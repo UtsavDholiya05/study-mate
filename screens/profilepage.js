@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,12 +7,39 @@ import {
   TouchableOpacity,
   StatusBar,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
-import { Ionicons,Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons, Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
 
-const ProfileScreen = () => {
+const ProfilePage = () => {
+  const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUserData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) throw new Error("Token not found");
+      const response = await axios.get("https://studymate-cirr.onrender.com/user/view", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserData(response.data.user);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   const renderInfoRow = (label, value) => (
     <View
       style={{
@@ -21,17 +48,33 @@ const ProfileScreen = () => {
         paddingVertical: height * 0.015,
         borderBottomWidth: 1,
         borderBottomColor: "#eee",
-        top: -height * 0.045,
       }}
     >
       <Text style={{ color: "#666", fontSize: width * 0.04 }}>{label}</Text>
-      <Text style={{ fontSize: width * 0.04 }}>{label === "Change password" ? "••••••••" : value}</Text>
+      <Text style={{ fontSize: width * 0.04 }}>
+        {label === "Change password" ? "••••••••" : value}
+      </Text>
     </View>
   );
 
+  if (loading) {
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black",
+        }}
+      >
+        <ActivityIndicator size="large" color="#9CA37C" />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
 
       {/* Header */}
       <View
@@ -75,6 +118,7 @@ const ProfileScreen = () => {
         </View>
       </View>
 
+      {/* Banner */}
       <View
         style={{
           height: height * 0.15,
@@ -96,6 +140,12 @@ const ProfileScreen = () => {
             padding: width * 0.05,
             paddingTop: height * 0.12,
             borderWidth: width * 0.008,
+            marginTop: -height * 0.05,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
+            elevation: 5,
           }}
         >
           {/* Profile Image */}
@@ -110,7 +160,7 @@ const ProfileScreen = () => {
           >
             <Image
               source={{
-                uri: "https://randomuser.me/api/portraits/women/44.jpg",
+                uri: userData?.profileImage || "https://randomuser.me/api/portraits/women/44.jpg",
               }}
               style={{
                 width: width * 0.21,
@@ -127,9 +177,9 @@ const ProfileScreen = () => {
                 borderRadius: width * 0.04,
                 alignItems: "center",
                 justifyContent: "center",
-              
-                transform: [{ translateY: width * 0.05 }], // Lowering the + sign
+                transform: [{ translateY: width * 0.05 }],
               }}
+              onPress={() => console.log("Change profile picture clicked")}
             >
               <Feather name="plus" size={width * 0.07} color="black" />
             </TouchableOpacity>
@@ -140,30 +190,28 @@ const ProfileScreen = () => {
             style={{
               fontSize: width * 0.06,
               fontWeight: "bold",
-              top: -height * 0.055,
+              marginTop: -height * 0.055,
               marginBottom: height * 0.02,
             }}
           >
-            Sarah Smiths
+            {userData?.name || "User"}
           </Text>
           <Text
             style={{
               fontSize: width * 0.05,
               fontWeight: "500",
               marginBottom: height * 0.02,
-              top: -height * 0.045,
             }}
           >
             Basic info
           </Text>
 
-          {renderInfoRow("Name", "Sarah Smiths")}
-          {renderInfoRow("Date of Birth", "December 24th")}
-          {renderInfoRow("Gender", "Female")}
-          {renderInfoRow("Email", "sarahsmiths@gmail.com")}
+          {renderInfoRow("Name", userData?.name || "N/A")}
+          {renderInfoRow("Date of Birth", userData?.dob || "N/A")}
+          {renderInfoRow("Gender", userData?.gender || "N/A")}
+          {renderInfoRow("Email", userData?.email || "N/A")}
           {renderInfoRow("Change password", "")}
 
-          {/* Edit Button */}
           <TouchableOpacity
             style={{
               marginTop: height * 0.05,
@@ -172,9 +220,17 @@ const ProfileScreen = () => {
               borderRadius: width * 0.02,
               alignItems: "center",
             }}
-            onPress={() => console.log("Edit Profile Clicked")}
+            onPress={() => navigation.navigate("editprofile")}
           >
-            <Text style={{ color: "white", fontSize: width * 0.05, fontWeight: "600" }}>Edit</Text>
+            <Text
+              style={{
+                color: "white",
+                fontSize: width * 0.05,
+                fontWeight: "600",
+              }}
+            >
+              Edit
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -182,4 +238,4 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default ProfilePage;

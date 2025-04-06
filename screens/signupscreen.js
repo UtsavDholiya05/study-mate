@@ -14,11 +14,11 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const BASE_URL = "https://studymate-cirr.onrender.com";
+const BASE_URL = "https://studymate-cirr.onrender.com"; // Backend URL
 
 const SignupScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     contact: "",
@@ -28,10 +28,11 @@ const SignupScreen = ({ navigation }) => {
   const { width, height } = useWindowDimensions();
 
   const validateName = (text) => {
-    setFormData((prev) => ({ ...prev, name: text }));
+    setFormData((prev) => ({ ...prev, username: text }));
     setErrors((prev) => ({
       ...prev,
-      name: text.length >= 3 ? "" : "Name must be at least 3 characters",
+      username:
+        text.length >= 4 ? "" : "Username must be at least 4 characters",
     }));
   };
 
@@ -48,7 +49,8 @@ const SignupScreen = ({ navigation }) => {
     setFormData((prev) => ({ ...prev, password: text }));
     setErrors((prev) => ({
       ...prev,
-      password: text.length >= 8 ? "" : "Password must be at least 8 characters",
+      password:
+        text.length >= 8 ? "" : "Password must be at least 8 characters",
     }));
   };
 
@@ -57,35 +59,44 @@ const SignupScreen = ({ navigation }) => {
     const contactRegex = /^\d{10}$/;
     setErrors((prev) => ({
       ...prev,
-      contact: contactRegex.test(text) ? "" : "Contact must be a 10-digit number",
+      contact: contactRegex.test(text)
+        ? ""
+        : "Contact must be a 10-digit number",
     }));
   };
 
   const handleSignup = async () => {
-    const { name, email, password, contact } = formData;
+    const { username, email, password, contact } = formData;
+
     if (
-      name &&
+      username &&
       email &&
       password &&
       contact &&
-      !errors.name &&
+      !errors.username &&
       !errors.email &&
       !errors.password &&
       !errors.contact
     ) {
       try {
+        console.log("Sending Signup Request with Payload:", formData); // Log request payload
         const response = await fetch(`${BASE_URL}/user/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
+
+        console.log("Response Status:", response.status); // Log HTTP status code
         const responseData = await response.json();
+        console.log("Backend Response Data:", responseData); // Log backend response
+
         if (response.ok) {
           navigation.navigate("otp");
         } else {
           alert(responseData.message || "Signup failed");
         }
       } catch (error) {
+        console.error("Network Error Details:", error); // Log detailed error
         alert("Network error. Please try again.");
       }
     } else {
@@ -109,21 +120,20 @@ const SignupScreen = ({ navigation }) => {
             }}
             keyboardShouldPersistTaps="handled"
           >
-            {/* App Title */}
             <Text
               style={{
                 fontSize: 32,
                 fontWeight: "600",
                 color: "#000",
-                alignSelf: "flex-end",
-                marginBottom: height * 0.09,
+                textAlign: "center", // Center-align the text
+                marginBottom: height * 0.06,
                 fontFamily: "PlayfairDisplay_400Regular",
+                alignSelf: "center", // Center the text horizontally within its parent
+                paddingTop: height * 0.05,
               }}
             >
-              StudySmart
+              StudyMate
             </Text>
-
-            {/* Form Container */}
             <View
               style={{
                 width: "95%",
@@ -161,15 +171,17 @@ const SignupScreen = ({ navigation }) => {
                 Let's get started
               </Text>
 
-              {/* Name */}
-              <Text style={{ marginLeft: 15 }}>Name</Text>
+              {/* Username */}
+              <Text style={{ marginLeft: 15 }}>Username</Text>
               <TextInput
-                value={formData.name}
+                value={formData.username}
                 onChangeText={validateName}
-                placeholder="Enter your name"
+                placeholder="Enter your username"
                 style={inputStyle}
               />
-              {errors.name ? <Text style={errorStyle}>{errors.name}</Text> : null}
+              {errors.username ? (
+                <Text style={errorStyle}>{errors.username}</Text>
+              ) : null}
 
               {/* Email */}
               <Text style={{ marginLeft: 15, marginTop: 10 }}>Email</Text>
@@ -180,21 +192,54 @@ const SignupScreen = ({ navigation }) => {
                 keyboardType="email-address"
                 style={inputStyle}
               />
-              {errors.email ? <Text style={errorStyle}>{errors.email}</Text> : null}
+              {errors.email ? (
+                <Text style={errorStyle}>{errors.email}</Text>
+              ) : null}
 
               {/* Password */}
-              <Text style={{ marginLeft: 15, marginTop: 10 }}>Password</Text>
-              <View style={{ position: "relative" }}>
+              <Text
+                style={{
+                  marginLeft: 15,
+                  color: "#000",
+                  marginBottom: 5,
+                  marginTop: 10,
+                  fontFamily: "Inconsolata_400Regular",
+                }}
+              >
+                Password
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "100%",
+                  position: "relative",
+                }}
+              >
                 <TextInput
                   value={formData.password}
                   onChangeText={validatePassword}
                   placeholder="Enter your password"
+                  placeholderTextColor="#666"
                   secureTextEntry={!isPasswordVisible}
-                  style={inputStyle}
+                  style={{
+                    width: "100%",
+                    padding: 15,
+                    borderWidth: 1,
+                    borderColor: "#000",
+                    borderRadius: 40,
+                    backgroundColor: "white",
+                    fontSize: 16,
+                    fontFamily: "Inconsolata_400Regular",
+                  }}
                 />
                 <TouchableOpacity
-                  onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                  style={{ position: "absolute", right: 20, top: 15 }}
+                  onPress={() => setIsPasswordVisible((prev) => !prev)}
+                  style={{
+                    position: "absolute",
+                    right: 15,
+                    padding: 10,
+                  }}
                 >
                   <Icon
                     name={isPasswordVisible ? "eye-off" : "eye"}
@@ -204,7 +249,9 @@ const SignupScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
               {errors.password ? (
-                <Text style={errorStyle}>{errors.password}</Text>
+                <Text style={{ color: "red", marginLeft: 15, marginTop: 5 }}>
+                  {errors.password}
+                </Text>
               ) : null}
 
               {/* Contact */}
@@ -242,6 +289,35 @@ const SignupScreen = ({ navigation }) => {
                   Sign Up
                 </Text>
               </TouchableOpacity>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginTop: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#555",
+                    fontFamily: "Inconsolata_400Regular",
+                  }}
+                >
+                  Already have an account?{" "}
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("login")}>
+                  <Text
+                    style={{
+                      color: "#566D67",
+                      fontWeight: "bold",
+                      fontFamily: "Inconsolata_400Regular",
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    Login
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>

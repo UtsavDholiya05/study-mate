@@ -43,12 +43,14 @@ const LoginScreen = ({ navigation }) => {
                 fontSize: 32,
                 fontWeight: "600",
                 color: "#000",
-                alignSelf: "flex-end",
-                marginBottom: height * 0.15,
+                textAlign: "center", // Center-align the text
+                marginBottom: height * 0.06,
                 fontFamily: "PlayfairDisplay_400Regular",
+                alignSelf: "center", // Center the text horizontally within its parent
+                paddingTop: height * 0.05,
               }}
             >
-              StudySmart
+              StudyMate
             </Text>
 
             {/* White Box */}
