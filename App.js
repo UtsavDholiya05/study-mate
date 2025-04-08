@@ -16,6 +16,7 @@ import EditProfilePage from "./screens/editprofilepage";
 import notificationpage from "./screens/notificationpage"
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { Inter_400Regular } from "@expo-google-fonts/inter";
+import MeetingScreen from "./screens/Meeting/MeetingScreen";
 
 
 const Stack = createStackNavigator();
@@ -48,6 +49,7 @@ const App = () => {
         <Stack.Screen name="mygroups" component={mygroups} />
         <Stack.Screen name="notificationpage" component={notificationpage} />
         <Stack.Screen name="editprofilepage" component={EditProfilePage} />
+        <Stack.Screen name="meetingscreen" component={MeetingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

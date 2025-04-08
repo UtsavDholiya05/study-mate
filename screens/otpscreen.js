@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,20 +6,61 @@ import {
   TouchableOpacity,
   SafeAreaView,
   useWindowDimensions,
+  Alert,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import axios from "axios";
+
+const BASE_URL = "https://studymate-cirr.onrender.com";
 
 const OtpScreen = ({ navigation }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef([]);
   const { width, height } = useWindowDimensions();
 
+  const email = "test@example.com"; // Replace with actual user email (from props or context)
+
+  // Send OTP on mount
+  useEffect(() => {
+    sendOtp();
+  }, []);
+
+  const sendOtp = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/user/auth/sendOtp?email=${email}`);
+      console.log("OTP sent:", response.data);
+    } catch (error) {
+      console.error("Error sending OTP:", error.response?.data || error.message);
+      Alert.alert("Error", "Failed to send OTP. Please try again.");
+    }
+  };
+
+  const verifyOtp = async () => {
+    const enteredOtp = otp.join("");
+    if (enteredOtp.length !== 6) {
+      Alert.alert("Incomplete OTP", "Please enter all 6 digits.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${BASE_URL}/user/auth/verifyOtp`, {
+        otp: enteredOtp,
+        email,
+      });
+      console.log("OTP verified:", response.data);
+      Alert.alert("Success", "OTP Verified!");
+      // navigation.navigate("NextScreen") // Optional
+    } catch (error) {
+      console.error("Verification failed:", error.response?.data || error.message);
+      Alert.alert("Invalid OTP", "Verification failed. Please try again.");
+    }
+  };
+
   const handleChange = (text, index) => {
     if (text.length > 1) text = text[text.length - 1];
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
-
     if (text && index < 5) {
       inputs.current[index + 1].focus();
     }
@@ -105,6 +146,7 @@ const OtpScreen = ({ navigation }) => {
 
         {/* Verify Button */}
         <TouchableOpacity
+          onPress={verifyOtp}
           style={{
             backgroundColor: "#000000",
             padding: 15,
@@ -119,7 +161,7 @@ const OtpScreen = ({ navigation }) => {
         {/* Resend OTP */}
         <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 15 }}>
           <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>Didn’t receive code? </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={sendOtp}>
             <Text style={{ color: "#566D67", fontWeight: "bold", textDecorationLine: "underline", fontFamily: "Inconsolata_400Regular" }}>
               Resend
             </Text>

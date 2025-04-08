@@ -38,7 +38,7 @@ const Homepage = () => {
       >
         <TouchableOpacity onPress={() => console.log("Menu Clicked")}>
           <Ionicons
-            style={{ transform: [{ translateY: 23 }] }}
+            style={{ transform: [{ translateY: width*0.06 }] }}
             name="menu"
             size={width * 0.11}
             color="#9CA37C"
@@ -118,7 +118,7 @@ const Homepage = () => {
                 fontSize: width * 0.03,
                 textAlign: "right",
                 transform: [
-                  { translateY: width * 0.02 },
+                  { translateY: width * 0.03 },
                   { translateX: width * 0.02 },
                 ],
               }}
@@ -138,6 +138,7 @@ const Homepage = () => {
         >
           {/* Card 1 - Join a meeting */}
           <TouchableOpacity
+          onPress={()=> navigation.navigate('meetingscreen')}
             style={{
               backgroundColor: "#9CA37C",
               marginHorizontal: width * 0.02,

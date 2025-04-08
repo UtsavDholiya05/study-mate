@@ -133,10 +133,10 @@ const SignupScreen = ({ navigation }) => {
                 fontWeight: "600",
                 color: "#000",
                 textAlign: "center", // Center-align the text
-                marginBottom: height * 0.06,
+                marginBottom: height * 0.09,
                 fontFamily: "PlayfairDisplay_400Regular",
-                alignSelf: "center", // Center the text horizontally within its parent
-                paddingTop: height * 0.05,
+                alignSelf: "flex-end", // Center the text horizontally within its parent
+                paddingTop: height * 0.009,
               }}
             >
               StudyMate

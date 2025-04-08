@@ -141,10 +141,10 @@ const LoginScreen = ({ navigation }) => {
                 fontWeight: "600",
                 color: "#000",
                 textAlign: "center",
-                marginBottom: height * 0.09,
+                marginBottom: height * 0.16,
                 fontFamily: "PlayfairDisplay_400Regular",
-                alignSelf: "center",
-                marginTop: height * 0.09,
+                alignSelf: "flex-end",
+                marginTop: height * 0.01,
               }}
             >
               StudyMate
