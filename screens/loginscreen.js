@@ -85,7 +85,7 @@ const LoginScreen = ({ navigation }) => {
         console.log("Backend Response Data:", responseData);
 
         if (response.ok) {
-          const user = responseData.details; // ← updated to get the correct user object
+          const user = responseData.details; 
           if (!user) {
             throw new Error("User data not received from server.");
           }
@@ -93,7 +93,7 @@ const LoginScreen = ({ navigation }) => {
           await AsyncStorage.setItem("user", JSON.stringify(user));
 
           setLoading(false);
-          navigation.navigate("homepage", { user });
+          navigation.navigate("otp", { email: formData.email });
         } else {
           setLoading(false);
           const errorMessage =

@@ -13,24 +13,33 @@ import axios from "axios";
 
 const BASE_URL = "https://studymate-cirr.onrender.com";
 
-const OtpScreen = ({ navigation }) => {
+const OtpScreen = ({ navigation, route }) => {
+  const { email } = route.params;
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef([]);
   const { width, height } = useWindowDimensions();
 
-  const email = "test@example.com"; // Replace with actual user email (from props or context)
-
   // Send OTP on mount
   useEffect(() => {
-    sendOtp();
+    if (email) {
+      sendOtp();
+    } else {
+      Alert.alert("Error", "Email not found. Please go back and try again.");
+      navigation.goBack();
+    }
   }, []);
 
   const sendOtp = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/user/auth/sendOtp?email=${email}`);
+      const response = await axios.get(
+        `${BASE_URL}/user/auth/sendOtp?email=${email}`
+      );
       console.log("OTP sent:", response.data);
     } catch (error) {
-      console.error("Error sending OTP:", error.response?.data || error.message);
+      console.error(
+        "Error sending OTP:",
+        error.response?.data || error.message
+      );
       Alert.alert("Error", "Failed to send OTP. Please try again.");
     }
   };
@@ -51,7 +60,10 @@ const OtpScreen = ({ navigation }) => {
       Alert.alert("Success", "OTP Verified!");
       // navigation.navigate("NextScreen") // Optional
     } catch (error) {
-      console.error("Verification failed:", error.response?.data || error.message);
+      console.error(
+        "Verification failed:",
+        error.response?.data || error.message
+      );
       Alert.alert("Invalid OTP", "Verification failed. Please try again.");
     }
   };
@@ -83,10 +95,23 @@ const OtpScreen = ({ navigation }) => {
       }}
     >
       {/* Header */}
-      <View style={{ position: "absolute", top: height * 0.08, left: width * 0.05 }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: "row", alignItems: "center" }}>
+      <View
+        style={{ position: "absolute", top: height * 0.08, left: width * 0.05 }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ flexDirection: "row", alignItems: "center" }}
+        >
           <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          <Text style={{ fontSize: 16, color: "black", fontFamily: "Inconsolata_400Regular" }}>Back</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              color: "black",
+              fontFamily: "Inconsolata_400Regular",
+            }}
+          >
+            Back
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -105,15 +130,37 @@ const OtpScreen = ({ navigation }) => {
           elevation: 5,
         }}
       >
-        <Text style={{ fontSize: 32, fontWeight: "bold", textAlign: "center", marginBottom: 5, fontFamily: "PlayfairDisplay_400Regular" }}>
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 5,
+            fontFamily: "PlayfairDisplay_400Regular",
+          }}
+        >
           Enter OTP
         </Text>
-        <Text style={{ fontSize: 14, color: "#666", textAlign: "center", marginBottom: 20, fontFamily: "Inconsolata_400Regular" }}>
+        <Text
+          style={{
+            fontSize: 14,
+            color: "#666",
+            textAlign: "center",
+            marginBottom: 20,
+            fontFamily: "Inconsolata_400Regular",
+          }}
+        >
           We sent a 6-digit verification code to your phone number
         </Text>
 
         {/* OTP Inputs */}
-        <View style={{ flexDirection: "row", justifyContent: "center", marginBottom: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginBottom: 20,
+          }}
+        >
           {otp.map((digit, index) => (
             <TextInput
               key={index}
@@ -155,14 +202,37 @@ const OtpScreen = ({ navigation }) => {
             width: "100%",
           }}
         >
-          <Text style={{ color: "white", fontSize: 18, fontFamily: "Inconsolata_400Regular" }}>Verify</Text>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18,
+              fontFamily: "Inconsolata_400Regular",
+            }}
+          >
+            Verify
+          </Text>
         </TouchableOpacity>
 
         {/* Resend OTP */}
-        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 15 }}>
-          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>Didn’t receive code? </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 15,
+          }}
+        >
+          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
+            Didn’t receive code?{" "}
+          </Text>
           <TouchableOpacity onPress={sendOtp}>
-            <Text style={{ color: "#566D67", fontWeight: "bold", textDecorationLine: "underline", fontFamily: "Inconsolata_400Regular" }}>
+            <Text
+              style={{
+                color: "#566D67",
+                fontWeight: "bold",
+                textDecorationLine: "underline",
+                fontFamily: "Inconsolata_400Regular",
+              }}
+            >
               Resend
             </Text>
           </TouchableOpacity>
