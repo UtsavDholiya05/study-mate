@@ -280,7 +280,7 @@ const LoginScreen = ({ navigation }) => {
 
               <TouchableOpacity
                 style={{ alignSelf: "flex-end", marginVertical: 10 }}
-                onPress={() => navigation.navigate("Forgotpass")}
+                onPress={() => navigation.navigate("forgotpass")}
               >
                 <Text
                   style={{
