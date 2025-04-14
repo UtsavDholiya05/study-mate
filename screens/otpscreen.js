@@ -58,7 +58,7 @@ const OtpScreen = ({ navigation, route }) => {
       });
       console.log("OTP verified:", response.data);
       Alert.alert("Success", "OTP Verified!");
-      // navigation.navigate("NextScreen") // Optional
+      navigation.navigate("homepage") // Optional
     } catch (error) {
       console.error(
         "Verification failed:",
