@@ -116,6 +116,7 @@ const SignupScreen = ({ navigation }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
@@ -127,16 +128,17 @@ const SignupScreen = ({ navigation }) => {
             }}
             keyboardShouldPersistTaps="handled"
           >
+            {/* App Name */}
             <Text
               style={{
                 fontSize: 32,
                 fontWeight: "600",
                 color: "#000",
                 textAlign: "center", // Center-align the text
-                marginBottom: height * 0.09,
+                marginBottom: height * 0.06,
                 fontFamily: "PlayfairDisplay_400Regular",
-                alignSelf: "flex-end", // Center the text horizontally within its parent
-                paddingTop: height * 0.009,
+                alignSelf: "center", // Center the text horizontally within its parent
+                paddingTop: height * 0.16,
               }}
             >
               StudyMate
