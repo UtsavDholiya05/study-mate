@@ -1,243 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  useWindowDimensions,
-  Alert,
-} from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import axios from "axios";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, Alert } from "react-native";
 
-const BASE_URL = "https://studymate-cirr.onrender.com";
+const BASE_URL = "https://studymate-cirr.onrender.com"; // Backend URL
 
-const OtpScreen = ({ navigation, route }) => {
-  const { email } = route.params;
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const inputs = useRef([]);
-  const { width, height } = useWindowDimensions();
-
-  // Send OTP on mount
-  useEffect(() => {
-    if (email) {
-      sendOtp();
-    } else {
-      Alert.alert("Error", "Email not found. Please go back and try again.");
-      navigation.goBack();
-    }
-  }, []);
-
-  const sendOtp = async () => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/user/auth/sendOtp?email=${email}`
-      );
-      console.log("OTP sent:", response.data);
-    } catch (error) {
-      console.error(
-        "Error sending OTP:",
-        error.response?.data || error.message
-      );
-      Alert.alert("Error", "Failed to send OTP. Please try again.");
-    }
-  };
+const OtpScreen = ({ route, navigation }) => {
+  const { email } = route.params; // ✅ safely extract email
+  const [otp, setOtp] = useState("");
 
   const verifyOtp = async () => {
-    const enteredOtp = otp.join("");
-    if (enteredOtp.length !== 6) {
-      Alert.alert("Incomplete OTP", "Please enter all 6 digits.");
-      return;
-    }
-
     try {
-      const response = await axios.post(`${BASE_URL}/user/auth/verifyOtp`, {
-        otp: enteredOtp,
-        email,
+      const response = await fetch(`${BASE_URL}/user/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
       });
-      console.log("OTP verified:", response.data);
-      Alert.alert("Success", "OTP Verified!");
-      navigation.navigate("homepage") // Optional
+
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert("Success", "Account verified successfully!");
+        navigation.navigate("login");
+      } else {
+        Alert.alert("Error", data.message);
+      }
     } catch (error) {
-      console.error(
-        "Verification failed:",
-        error.response?.data || error.message
-      );
-      Alert.alert("Invalid OTP", "Verification failed. Please try again.");
-    }
-  };
-
-  const handleChange = (text, index) => {
-    if (text.length > 1) text = text[text.length - 1];
-    const newOtp = [...otp];
-    newOtp[index] = text;
-    setOtp(newOtp);
-    if (text && index < 5) {
-      inputs.current[index + 1].focus();
-    }
-  };
-
-  const handleBackspace = (text, index) => {
-    if (!text && index > 0) {
-      inputs.current[index - 1].focus();
+      Alert.alert("Error", "Network error. Please try again.");
     }
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#FFFFF1",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: width * 0.05,
-      }}
-    >
-      {/* Header */}
-      <View
-        style={{ position: "absolute", top: height * 0.08, left: width * 0.05 }}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{ flexDirection: "row", alignItems: "center" }}
-        >
-          <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          <Text
-            style={{
-              fontSize: 16,
-              color: "black",
-              fontFamily: "Inconsolata_400Regular",
-            }}
-          >
-            Back
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* OTP Box */}
-      <View
-        style={{
-          width: "90%",
-          maxWidth: 400,
-          backgroundColor: "#FFFFFF",
-          borderRadius: 20,
-          padding: 20,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.4,
-          shadowRadius: 4,
-          elevation: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 32,
-            fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: 5,
-            fontFamily: "PlayfairDisplay_400Regular",
-          }}
-        >
-          Enter OTP
-        </Text>
-        <Text
-          style={{
-            fontSize: 14,
-            color: "#666",
-            textAlign: "center",
-            marginBottom: 20,
-            fontFamily: "Inconsolata_400Regular",
-          }}
-        >
-          We sent a 6-digit verification code to your phone number
-        </Text>
-
-        {/* OTP Inputs */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: 20,
-          }}
-        >
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => (inputs.current[index] = ref)}
-              style={{
-                width: width * 0.12,
-                height: height * 0.06,
-                borderWidth: 1,
-                borderColor: "#000000",
-                borderRadius: 30,
-                textAlign: "center",
-                fontSize: 24,
-                backgroundColor: "#FFF",
-                marginHorizontal: 5,
-                fontFamily: "Inconsolata_400Regular",
-                color: "#000",
-              }}
-              keyboardType="numeric"
-              maxLength={1}
-              value={digit}
-              onChangeText={(text) => handleChange(text, index)}
-              onKeyPress={({ nativeEvent }) => {
-                if (nativeEvent.key === "Backspace") {
-                  handleBackspace(digit, index);
-                }
-              }}
-            />
-          ))}
-        </View>
-
-        {/* Verify Button */}
-        <TouchableOpacity
-          onPress={verifyOtp}
-          style={{
-            backgroundColor: "#000000",
-            padding: 15,
-            borderRadius: 40,
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 18,
-              fontFamily: "Inconsolata_400Regular",
-            }}
-          >
-            Verify
-          </Text>
-        </TouchableOpacity>
-
-        {/* Resend OTP */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 15,
-          }}
-        >
-          <Text style={{ color: "#555", fontFamily: "Inconsolata_400Regular" }}>
-            Didn’t receive code?{" "}
-          </Text>
-          <TouchableOpacity onPress={sendOtp}>
-            <Text
-              style={{
-                color: "#566D67",
-                fontWeight: "bold",
-                textDecorationLine: "underline",
-                fontFamily: "Inconsolata_400Regular",
-              }}
-            >
-              Resend
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+    <SafeAreaView style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+      <Text style={{ fontSize: 24, textAlign: "center", marginBottom: 20 }}>Enter OTP sent to {email}</Text>
+      <TextInput
+        value={otp}
+        onChangeText={setOtp}
+        placeholder="Enter OTP"
+        keyboardType="numeric"
+        style={{ borderWidth: 1, borderColor: "#000", padding: 15, borderRadius: 8, marginBottom: 20 }}
+      />
+      <TouchableOpacity onPress={verifyOtp} style={{ backgroundColor: "#000", padding: 15, borderRadius: 8, alignItems: "center" }}>
+        <Text style={{ color: "#FFF", fontSize: 16 }}>Verify OTP</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

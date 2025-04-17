@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Alert,
   useWindowDimensions,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,11 +85,15 @@ const LoginScreen = ({ navigation }) => {
         console.log("Backend Response Data:", responseData);
 
         if (response.ok) {
-          const user = responseData.details; 
-          if (!user) {
-            throw new Error("User data not received from server.");
+          const token = responseData.authToken;
+          const user = responseData.details;
+
+          if (!token || !user) {
+            throw new Error("Token or user data not received from server.");
           }
 
+          // Store the token and user details in AsyncStorage
+          await AsyncStorage.setItem("token", token);
           await AsyncStorage.setItem("user", JSON.stringify(user));
 
           setLoading(false);
@@ -141,11 +145,11 @@ const LoginScreen = ({ navigation }) => {
                 fontSize: 32,
                 fontWeight: "600",
                 color: "#000",
-                textAlign: "center", // Center-align the text
-                marginBottom: height * 0.06,
+                textAlign: "center",
                 fontFamily: "PlayfairDisplay_400Regular",
-                alignSelf: "center", // Center the text horizontally within its parent
-                paddingTop: height * 0.16,
+                alignSelf: "center",
+                paddingTop: height * 0.15,
+                paddingBottom: height * 0.05,
               }}
             >
               StudyMate

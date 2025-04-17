@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import jwt_decode from "jwt-decode"; // Add the jwt-decode package to decode the token
 
 const { height, width } = Dimensions.get("window");
 
@@ -26,7 +27,6 @@ const EditProfilePage = () => {
   const [editableData, setEditableData] = useState({
     username: "",
     contact: "",
-    // gender: "",
     email: "",
   });
 
@@ -39,7 +39,6 @@ const EditProfilePage = () => {
       setEditableData({
         username: user.username || "",
         contact: user.contact || "",
-        // gender: user.gender || "",
         email: user.email || "",
       });
     } catch (error) {
@@ -55,30 +54,47 @@ const EditProfilePage = () => {
 
   const handleSaveChanges = async () => {
     try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Error", "User token not found. Please login again.");
+        return;
+      }
+
+      // Decode the token to check if it has expired
+      const decodedToken = jwt_decode(token);
+      if (decodedToken.exp * 1000 < Date.now()) {
+        Alert.alert("Session expired", "Please log in again.");
+        await AsyncStorage.removeItem("token");
+        return;
+      }
+
       const updatedUserData = {
         username: editableData.username.trim(),
         contact: editableData.contact.trim(),
-        // gender: editableData.gender.trim(),
         email: editableData.email.trim().toLowerCase(),
       };
 
       const response = await axios.patch(
         "https://studymate-cirr.onrender.com/user/update",
-        updatedUserData
+        updatedUserData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (response.status === 200) {
         const updatedUser = { ...userData, ...updatedUserData };
         await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
-        const confirmedUser = await AsyncStorage.getItem("user");
-        console.log("Updated user saved in AsyncStorage:", JSON.parse(confirmedUser));
         Alert.alert("Success", "Profile updated successfully!");
         navigation.goBack();
       } else {
         Alert.alert("Error", "Failed to update profile. Please try again.");
       }
     } catch (error) {
-      console.error("Failed to save changes:", error);
+      console.error("Failed to save changes:", error.response || error);
       Alert.alert("Error", "An unexpected error occurred. Please try again.");
     }
   };
