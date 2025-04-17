@@ -16,7 +16,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import jwt_decode from "jwt-decode"; // Add the jwt-decode package to decode the token
 
 const { height, width } = Dimensions.get("window");
 
@@ -54,17 +53,11 @@ const EditProfilePage = () => {
 
   const handleSaveChanges = async () => {
     try {
+      // Get JWT token from AsyncStorage
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "User token not found. Please login again.");
-        return;
-      }
-
-      // Decode the token to check if it has expired
-      const decodedToken = jwt_decode(token);
-      if (decodedToken.exp * 1000 < Date.now()) {
-        Alert.alert("Session expired", "Please log in again.");
-        await AsyncStorage.removeItem("token");
+        Alert.alert("Unauthorized", "User token not found. Please log in again.");
+        navigation.navigate("loginpage"); // Navigate to login if no token found
         return;
       }
 
@@ -79,7 +72,7 @@ const EditProfilePage = () => {
         updatedUserData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Attach JWT here
             "Content-Type": "application/json",
           },
         }
@@ -88,13 +81,15 @@ const EditProfilePage = () => {
       if (response.status === 200) {
         const updatedUser = { ...userData, ...updatedUserData };
         await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
+        const confirmedUser = await AsyncStorage.getItem("user");
+        console.log("Updated user saved in AsyncStorage:", JSON.parse(confirmedUser));
         Alert.alert("Success", "Profile updated successfully!");
         navigation.goBack();
       } else {
         Alert.alert("Error", "Failed to update profile. Please try again.");
       }
     } catch (error) {
-      console.error("Failed to save changes:", error.response || error);
+      console.error("Failed to save changes:", error);
       Alert.alert("Error", "An unexpected error occurred. Please try again.");
     }
   };
@@ -191,7 +186,7 @@ const EditProfilePage = () => {
         </View>
       </View>
 
-      <View showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Banner */}
         <View
           style={{
@@ -208,7 +203,6 @@ const EditProfilePage = () => {
         <View>
           <View
             style={{
-              height: height * 0.85,
               backgroundColor: "#fff",
               borderRadius: width * 0.02,
               padding: width * 0.05,
@@ -284,7 +278,6 @@ const EditProfilePage = () => {
 
             {renderEditableRow("Name", "username", "Enter your name")}
             {renderEditableRow("Contact No", "contact", "Enter your contact")}
-            {/* {renderEditableRow("Gender", "gender", "Male/Female/Other")} */}
             {renderEditableRow("Email", "email", "Enter your email")}
 
             <TouchableOpacity
@@ -309,7 +302,7 @@ const EditProfilePage = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
