@@ -11,7 +11,7 @@ import {
   ScrollView,
   Platform,
   Keyboard,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -80,24 +80,34 @@ const SignupScreen = ({ navigation }) => {
       !errors.contact
     ) {
       try {
-        console.log("Sending Signup Request with Payload:", formData); // Log request payload
+        console.log("Sending Signup Request with Payload:", formData);
         const response = await fetch(`${BASE_URL}/user/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
 
-        console.log("Response Status:", response.status); // Log HTTP status code
-        const responseData = await response.json();
-        console.log("Backend Response Data:", responseData); // Log backend response
+        console.log("Response Status:", response.status);
+
+        const contentType = response.headers.get("content-type");
+        let responseData;
+
+        if (contentType && contentType.includes("application/json")) {
+          responseData = await response.json();
+        } else {
+          const textData = await response.text();
+          responseData = { message: textData };
+        }
+
+        console.log("Backend Response Data:", responseData);
 
         if (response.ok) {
-          navigation.navigate("otp");
+          navigation.navigate("otp", { email: formData.email });
         } else {
           alert(responseData.message || "Signup failed");
         }
       } catch (error) {
-        console.error("Network Error Details:", error); // Log detailed error
+        console.error("Network Error Details:", error);
         alert("Network error. Please try again.");
       }
     } else {
@@ -116,6 +126,7 @@ const SignupScreen = ({ navigation }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
@@ -132,15 +143,15 @@ const SignupScreen = ({ navigation }) => {
                 fontSize: 32,
                 fontWeight: "600",
                 color: "#000",
-                textAlign: "center", // Center-align the text
-                marginBottom: height * 0.09,
-                fontFamily: "PlayfairDisplay_400Regular",
-                alignSelf: "flex-end", // Center the text horizontally within its parent
-                paddingTop: height * 0.009,
+                textAlign: "center",
+                marginBottom: height * 0.06,
+                alignSelf: "center",
+                paddingTop: height * 0.10,
               }}
             >
               StudyMate
             </Text>
+
             <View
               style={{
                 width: "95%",
@@ -161,7 +172,6 @@ const SignupScreen = ({ navigation }) => {
                   fontWeight: "bold",
                   textAlign: "center",
                   marginBottom: 10,
-                  fontFamily: "PlayfairDisplay_400Regular",
                 }}
               >
                 Create Your Account
@@ -172,7 +182,6 @@ const SignupScreen = ({ navigation }) => {
                   color: "#666",
                   textAlign: "center",
                   marginBottom: 20,
-                  fontFamily: "Inconsolata_400Regular",
                 }}
               >
                 Let's get started
@@ -204,17 +213,7 @@ const SignupScreen = ({ navigation }) => {
               ) : null}
 
               {/* Password */}
-              <Text
-                style={{
-                  marginLeft: 15,
-                  color: "#000",
-                  marginBottom: 5,
-                  marginTop: 10,
-                  fontFamily: "Inconsolata_400Regular",
-                }}
-              >
-                Password
-              </Text>
+              <Text style={{ marginLeft: 15, marginTop: 10 }}>Password</Text>
               <View
                 style={{
                   flexDirection: "row",
@@ -237,16 +236,11 @@ const SignupScreen = ({ navigation }) => {
                     borderRadius: 40,
                     backgroundColor: "white",
                     fontSize: 16,
-                    fontFamily: "Inconsolata_400Regular",
                   }}
                 />
                 <TouchableOpacity
                   onPress={() => setIsPasswordVisible((prev) => !prev)}
-                  style={{
-                    position: "absolute",
-                    right: 15,
-                    padding: 10,
-                  }}
+                  style={{ position: "absolute", right: 15, padding: 10 }}
                 >
                   <Icon
                     name={isPasswordVisible ? "eye-off" : "eye"}
@@ -286,15 +280,7 @@ const SignupScreen = ({ navigation }) => {
                   marginTop: 20,
                 }}
               >
-                <Text
-                  style={{
-                    color: "#FFF",
-                    fontSize: 16,
-                    fontFamily: "Inconsolata_400Regular",
-                  }}
-                >
-                  Sign Up
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 16 }}>Sign Up</Text>
               </TouchableOpacity>
 
               <View
@@ -304,20 +290,12 @@ const SignupScreen = ({ navigation }) => {
                   marginTop: 15,
                 }}
               >
-                <Text
-                  style={{
-                    color: "#555",
-                    fontFamily: "Inconsolata_400Regular",
-                  }}
-                >
-                  Already have an account?{" "}
-                </Text>
+                <Text style={{ color: "#555" }}>Already have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("login")}>
                   <Text
                     style={{
                       color: "#566D67",
                       fontWeight: "bold",
-                      fontFamily: "Inconsolata_400Regular",
                       textDecorationLine: "underline",
                     }}
                   >
@@ -341,7 +319,6 @@ const inputStyle = {
   borderRadius: 40,
   backgroundColor: "#FFF",
   fontSize: 16,
-  fontFamily: "Inconsolata_400Regular",
   marginTop: 5,
 };
 

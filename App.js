@@ -17,6 +17,7 @@ import notificationpage from "./screens/notificationpage"
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { Inter_400Regular } from "@expo-google-fonts/inter";
 import MeetingScreen from "./screens/Meeting/MeetingScreen";
+import bottomtab from "./screens/bottomtab";
 
 
 const Stack = createStackNavigator();
@@ -39,7 +40,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="bottomtab">
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="signup" component={SignupScreen} />
         <Stack.Screen name="forgotpass" component={ForgotPass} />
@@ -50,6 +51,7 @@ const App = () => {
         <Stack.Screen name="notificationpage" component={notificationpage} />
         <Stack.Screen name="editprofilepage" component={EditProfilePage} />
         <Stack.Screen name="meetingscreen" component={MeetingScreen} />
+        <Stack.Screen name="bottomtab" component={bottomtab} />
       </Stack.Navigator>
     </NavigationContainer>
   );

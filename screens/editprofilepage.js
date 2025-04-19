@@ -26,7 +26,6 @@ const EditProfilePage = () => {
   const [editableData, setEditableData] = useState({
     username: "",
     contact: "",
-    // gender: "",
     email: "",
   });
 
@@ -39,7 +38,6 @@ const EditProfilePage = () => {
       setEditableData({
         username: user.username || "",
         contact: user.contact || "",
-        // gender: user.gender || "",
         email: user.email || "",
       });
     } catch (error) {
@@ -55,16 +53,29 @@ const EditProfilePage = () => {
 
   const handleSaveChanges = async () => {
     try {
+      // Get JWT token from AsyncStorage
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Unauthorized", "User token not found. Please log in again.");
+        navigation.navigate("loginpage"); // Navigate to login if no token found
+        return;
+      }
+
       const updatedUserData = {
         username: editableData.username.trim(),
         contact: editableData.contact.trim(),
-        // gender: editableData.gender.trim(),
         email: editableData.email.trim().toLowerCase(),
       };
 
       const response = await axios.patch(
         "https://studymate-cirr.onrender.com/user/update",
-        updatedUserData
+        updatedUserData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach JWT here
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (response.status === 200) {
@@ -175,7 +186,7 @@ const EditProfilePage = () => {
         </View>
       </View>
 
-      <View showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Banner */}
         <View
           style={{
@@ -192,7 +203,6 @@ const EditProfilePage = () => {
         <View>
           <View
             style={{
-              height: height * 0.85,
               backgroundColor: "#fff",
               borderRadius: width * 0.02,
               padding: width * 0.05,
@@ -268,7 +278,6 @@ const EditProfilePage = () => {
 
             {renderEditableRow("Name", "username", "Enter your name")}
             {renderEditableRow("Contact No", "contact", "Enter your contact")}
-            {/* {renderEditableRow("Gender", "gender", "Male/Female/Other")} */}
             {renderEditableRow("Email", "email", "Enter your email")}
 
             <TouchableOpacity
@@ -293,7 +302,7 @@ const EditProfilePage = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
