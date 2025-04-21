@@ -13,18 +13,18 @@ import axios from "axios";
 
 const BASE_URL = "https://studymate-cirr.onrender.com";
 
-const OtpScreen = ({ navigation, route }) => {
-  const { email } = route.params;
+const otpscreen = ({ navigation, route }) => {
+  const { email, authToken } = route.params;
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef([]);
   const { width, height } = useWindowDimensions();
 
   // Send OTP on mount
   useEffect(() => {
-    if (email) {
+    if (email && authToken) {
       sendOtp();
     } else {
-      Alert.alert("Error", "Email not found. Please go back and try again.");
+      Alert.alert("Error", "Missing information. Please go back and try again.");
       navigation.goBack();
     }
   }, []);
@@ -32,7 +32,12 @@ const OtpScreen = ({ navigation, route }) => {
   const sendOtp = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/user/auth/sendOtp?email=${email}`
+        `${BASE_URL}/user/auth/sendOtp?email=${email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
       );
       console.log("OTP sent:", response.data);
     } catch (error) {
@@ -52,13 +57,21 @@ const OtpScreen = ({ navigation, route }) => {
     }
 
     try {
-      const response = await axios.post(`${BASE_URL}/user/auth/verifyOtp`, {
-        otp: enteredOtp,
-        email,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/user/auth/verifyOtp`,
+        {
+          otp: enteredOtp,
+          email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       console.log("OTP verified:", response.data);
       Alert.alert("Success", "OTP Verified!");
-      navigation.navigate("homepage") // Optional
+      navigation.navigate("homepage");
     } catch (error) {
       console.error(
         "Verification failed:",
@@ -242,4 +255,4 @@ const OtpScreen = ({ navigation, route }) => {
   );
 };
 
-export default OtpScreen;
+export default otpscreen;
