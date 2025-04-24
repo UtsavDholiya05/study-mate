@@ -97,7 +97,10 @@ const LoginScreen = ({ navigation }) => {
           await AsyncStorage.setItem("user", JSON.stringify(user));
 
           setLoading(false);
-          navigation.navigate("homepage", { email: formData.email });
+          navigation.navigate("otpscreen", {
+            email: formData.email,
+            authToken: token,
+          });
         } else {
           setLoading(false);
           const errorMessage =
