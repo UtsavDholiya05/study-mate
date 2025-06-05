@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window"); // Get device width
 
@@ -36,9 +36,9 @@ const Homepage = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity onPress={() => console.log("Menu Clicked")}>
+        <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
           <Ionicons
-            style={{ transform: [{ translateY: width*0.06 }] }}
+            style={{ transform: [{ translateY: width * 0.06 }] }}
             name="menu"
             size={width * 0.11}
             color="#9CA37C"
@@ -138,7 +138,7 @@ const Homepage = () => {
         >
           {/* Card 1 - Join a meeting */}
           <TouchableOpacity
-          onPress={()=> navigation.navigate('meetingscreen')}
+            onPress={() => navigation.navigate("meetingscreen")}
             style={{
               backgroundColor: "#9CA37C",
               marginHorizontal: width * 0.02,

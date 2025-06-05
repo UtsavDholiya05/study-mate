@@ -16,7 +16,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { CalendarIcon, ClockIcon } from "lucide-react-native";
+// import { CalendarIcon, ClockIcon } from "lucide-react-native";
 import { format } from "date-fns";
 
 const { height, width } = Dimensions.get("window");
@@ -105,7 +105,7 @@ const MeetingScreen = () => {
       >
         <TouchableOpacity>
           <Ionicons
-            style={{ transform: [{ translateY: width*0.06 }] }}
+            style={{ transform: [{ translateY: width * 0.06 }] }}
             name="menu"
             size={width * 0.11}
             color="#9CA37C"
@@ -192,8 +192,9 @@ const MeetingScreen = () => {
             style={{
               color: "#000",
               fontSize: width * 0.03,
-              transform: [{ translateX: -width * 0.15 },
-                { translateY: -width * 0.01 }
+              transform: [
+                { translateX: -width * 0.15 },
+                { translateY: -width * 0.01 },
               ],
             }}
           >
@@ -396,7 +397,6 @@ const MeetingScreen = () => {
       </Modal>
 
       {/* Schedule Modal */}
-      {/* Schedule Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -474,7 +474,7 @@ const MeetingScreen = () => {
                 gap: 8,
               }}
             >
-              <CalendarIcon size={20} color="#444" />
+              <MaterialCommunityIcons name="calendar" size={20} color="#444" />
               <Text
                 style={{
                   fontFamily: "Inconsolata_400Regular",
