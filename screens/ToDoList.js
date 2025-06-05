@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
@@ -15,6 +16,33 @@ const { width, height } = Dimensions.get("window");
 const ToDoPage = () => {
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
+
+  // Load tasks from AsyncStorage on mount
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const storedTasks = await AsyncStorage.getItem("tasks");
+        if (storedTasks) {
+          setTasks(JSON.parse(storedTasks));
+        }
+      } catch (error) {
+        console.error("Failed to load tasks:", error);
+      }
+    };
+    loadTasks();
+  }, []);
+
+  // Save tasks to AsyncStorage whenever they change
+  useEffect(() => {
+    const saveTasks = async () => {
+      try {
+        await AsyncStorage.setItem("tasks", JSON.stringify(tasks));
+      } catch (error) {
+        console.error("Failed to save tasks:", error);
+      }
+    };
+    saveTasks();
+  }, [tasks]);
 
   const addTask = () => {
     if (taskInput.trim()) {
@@ -47,7 +75,7 @@ const ToDoPage = () => {
           item.completed && styles.completedTask,
         ]}
       >
-        <Text style={styles.taskText}>{item.text}</Text>
+        <Text style={styles.taskText}>{item.text}</Text> {/* Wrap task.text in <Text> */}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => deleteTask(item.id)}>
         <Ionicons name="trash" size={24} color="#f5f5dc" />
