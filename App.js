@@ -10,10 +10,10 @@ import LoginScreen from "./screens/loginscreen";
 import SignupScreen from "./screens/signupscreen";
 import ForgotPass from "./screens/forgotpass";
 import OtpScreen from "./screens/otpscreen";
-import homepage from "./screens/homepage";
+import Homepage from "./screens/Homepage"; // Ensure this is correctly imported
 import profilepage from "./screens/profilepage";
 import mygroups from "./screens/mygroups";
-import EditProfilePage from "./screens/editprofilepage";
+import EditProfilePage from "./screens/EditProfilePage"; // Ensure this is correctly imported
 import notificationpage from "./screens/notificationpage";
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { Inter_400Regular } from "@expo-google-fonts/inter";
@@ -31,9 +31,9 @@ SplashScreen.preventAutoHideAsync();
 
 function MainStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="loginscreen">
-      <Stack.Screen name="loginscreen" component={LoginScreen} /> {/* Added loginscreen */}
-      <Stack.Screen name="homepage" component={homepage} />
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="homepage">
+      <Stack.Screen name="loginscreen" component={LoginScreen} />
+      <Stack.Screen name="homepage" component={Homepage} />
       <Stack.Screen name="profilepage" component={profilepage} />
       <Stack.Screen name="mygroups" component={mygroups} />
       <Stack.Screen name="notificationpage" component={notificationpage} />
@@ -41,7 +41,7 @@ function MainStack() {
       <Stack.Screen name="meetingscreen" component={MeetingScreen} />
       <Stack.Screen name="bottomtab" component={bottomtab} />
       <Stack.Screen name="studymaterial" component={studymaterial} />
-      <Stack.Screen name="notes" component={require("./screens/notes").default} />
+      <Stack.Screen name="notes" component={require("./screens/notesScreen").default} />
       <Stack.Screen name="studymaterialpage" component={studymaterialpage} />
     </Stack.Navigator>
   );
@@ -72,10 +72,10 @@ const App = () => {
         screenOptions={{
           headerShown: false,
           drawerStyle: {
-            width: "100%", // Full width drawer to remove white space
-            backgroundColor: "#111", // Match your drawer background
+            width: "100%",
+            backgroundColor: "#111",
           },
-          overlayColor: "rgba(0,0,0,0.3)", // Optional: darken the rest of the screen
+          overlayColor: "rgba(0,0,0,0.3)",
         }}
         initialRouteName="MainStack"
       >

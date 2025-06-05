@@ -27,17 +27,22 @@ const CustomDrawer = ({ navigation }) => {
         onChangeText={setSearch}
         placeholder="Search"
         placeholderTextColor="#f5f5dc"
-        // underlineColorAndroid="#2196F3" // Removed blue underline
       />
       <View style={styles.menuContainer}>
+        {/* Navigate to Home */}
         <TouchableOpacity
           style={styles.activeItem}
-          onPress={() => navigation.navigate("homepage")}
+          onPress={() => navigation.navigate("MainStack", { screen: "Homepage" })} // Navigate to homepage in MainStack
         >
           <Ionicons name="home" size={22} color="#111" style={{ marginRight: 8 }} />
           <Text style={styles.activeText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("settings")}>
+
+        {/* Navigate to Edit Profile Page */}
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("MainStack", { screen: "editprofilepage" })} // Navigate to editprofilepage in MainStack
+        >
           <Ionicons name="settings" size={22} color="#f5f5dc" style={{ marginRight: 8 }} />
           <Text style={styles.menuText}>Settings</Text>
         </TouchableOpacity>
@@ -60,7 +65,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     paddingVertical: 40,
     paddingHorizontal: 8,
-    // bottom: 40,
   },
   header: {
     alignItems: "center",
@@ -77,8 +81,6 @@ const styles = StyleSheet.create({
   searchInput: {
     color: "#f5f5dc",
     fontSize: 18,
-    // borderBottomWidth: 2,
-    // borderBottomColor: "#2196F3",
     marginBottom: 35,
     fontFamily: "serif",
     width: "100%",

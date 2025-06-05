@@ -27,6 +27,7 @@ const MeetingScreen = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
+  const [renameModalVisible, setRenameModalVisible] = useState(false);
   const [meetingId, setMeetingId] = useState("");
   const [userName, setUserName] = useState("");
   const [date, setDate] = useState(new Date());
@@ -34,8 +35,8 @@ const MeetingScreen = () => {
 
   // Scheduled calls state
   const [scheduledCalls, setScheduledCalls] = useState([]);
-  // State for scheduling a new call
   const [meetingTitle, setMeetingTitle] = useState("");
+  const [selectedCallId, setSelectedCallId] = useState(null);
 
   // Load scheduled calls from AsyncStorage on mount
   useEffect(() => {
@@ -123,6 +124,27 @@ const MeetingScreen = () => {
     setScheduleModalVisible(false);
     setMeetingTitle("");
     setDate(new Date());
+  };
+
+  // Rename a scheduled call
+  const renameScheduledCall = () => {
+    if (!meetingTitle.trim()) {
+      alert("Please enter a meeting name.");
+      return;
+    }
+    setScheduledCalls(
+      scheduledCalls.map((call) =>
+        call.id === selectedCallId ? { ...call, title: meetingTitle } : call
+      )
+    );
+    setRenameModalVisible(false);
+    setMeetingTitle("");
+    setSelectedCallId(null);
+  };
+
+  // Delete a scheduled call
+  const deleteScheduledCall = (id) => {
+    setScheduledCalls(scheduledCalls.filter((call) => call.id !== id));
   };
 
   return (
@@ -365,6 +387,44 @@ const MeetingScreen = () => {
                   <Text style={{ fontSize: width * 0.035, color: "#555" }}>
                     {call.date}
                   </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 10,
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        setRenameModalVisible(true);
+                        setSelectedCallId(call.id);
+                        setMeetingTitle(call.title);
+                      }}
+                      style={{
+                        backgroundColor: "#9CA37C",
+                        paddingVertical: 6,
+                        paddingHorizontal: 16,
+                        borderRadius: 8,
+                      }}
+                    >
+                      <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                        Rename
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => deleteScheduledCall(call.id)}
+                      style={{
+                        backgroundColor: "#FF6B6B",
+                        paddingVertical: 6,
+                        paddingHorizontal: 16,
+                        borderRadius: 8,
+                      }}
+                    >
+                      <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                        Delete
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))
             )}
@@ -604,6 +664,115 @@ const MeetingScreen = () => {
 
               <TouchableOpacity
                 onPress={() => setScheduleModalVisible(false)}
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: 12,
+                  width: width * 0.25,
+                  borderColor: "#666",
+                  borderWidth: 1,
+                  alignItems: "center",
+                  paddingVertical: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#000",
+                    fontFamily: "Inter_400Regular",
+                    fontSize: 16,
+                  }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Rename Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={renameModalVisible}
+        onRequestClose={() => setRenameModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 16,
+              padding: 24,
+              width: "85%",
+              shadowColor: "#000",
+              shadowOpacity: 0.2,
+              shadowRadius: 6,
+              elevation: 12,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 28,
+                marginBottom: height * 0.02,
+                fontFamily: "Inter_400Regular",
+              }}
+            >
+              Rename Call
+            </Text>
+
+            <TextInput
+              placeholder="Meeting name"
+              placeholderTextColor="#999"
+              value={meetingTitle}
+              onChangeText={setMeetingTitle}
+              style={{
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 12,
+                padding: 12,
+                marginBottom: 20,
+                fontFamily: "Inconsolata_400Regular",
+              }}
+            />
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingHorizontal: 10,
+              }}
+            >
+              <TouchableOpacity
+                onPress={renameScheduledCall}
+                style={{
+                  backgroundColor: "#9CA37C",
+                  borderRadius: 12,
+                  width: width * 0.25,
+                  borderColor: "#666",
+                  borderWidth: 1,
+                  alignItems: "center",
+                  paddingVertical: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontFamily: "Inter_400Regular",
+                    fontSize: 16,
+                  }}
+                >
+                  Rename
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setRenameModalVisible(false)}
                 style={{
                   backgroundColor: "#fff",
                   borderRadius: 12,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import homepage from './homepage';
+import homepage from './Homepage';
 import profilepage from './profilepage';
 import mygroups from './mygroups';
 
