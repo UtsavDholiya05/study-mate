@@ -19,8 +19,9 @@ import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display"
 import { Inter_400Regular } from "@expo-google-fonts/inter";
 import MeetingScreen from "./screens/Meeting/MeetingScreen";
 import bottomtab from "./screens/bottomtab";
-import studymaterial from "./screens/studymaterial";
+import studymaterial from "./screens/studygroup";
 import CustomDrawer from "./screens/customDrawer";
+import studymaterialpage from "./screens/studymaterialpage";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -39,6 +40,8 @@ function MainStack() {
       <Stack.Screen name="meetingscreen" component={MeetingScreen} />
       <Stack.Screen name="bottomtab" component={bottomtab} />
       <Stack.Screen name="studymaterial" component={studymaterial} />
+      <Stack.Screen name="notes" component={require("./screens/notes").default} />
+      <Stack.Screen name="studymaterialpage" component={studymaterialpage} />
     </Stack.Navigator>
   );
 }
