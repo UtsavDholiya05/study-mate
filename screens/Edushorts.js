@@ -10,11 +10,12 @@ import {
   Dimensions,
   Linking,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for the back button
+import { Ionicons } from "@expo/vector-icons";
+import { YT_API_KEY } from "@env"; // Import from .env
 
 const { width, height } = Dimensions.get("window");
 
-const API_KEY = "AIzaSyAc_E3HASG2hDK8rLZrfOSZeRu-EiBpYfQ"; // Replace with your YouTube Data API key
+const API_KEY = YT_API_KEY; // Use the imported key
 
 const Edushorts = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -112,18 +113,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
     paddingHorizontal: width * 0.05,
-    paddingTop: width * 0.1, // Add padding from the top
+    paddingTop: width * 0.1,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center", // Center the header content
-    padding: 15, // Add padding to the header section
+    justifyContent: "center",
+    padding: 15,
     marginBottom: width * 0.05,
   },
   backButton: {
     position: "absolute",
-    left: 0, // Position the back button to the left
+    left: 0,
   },
   headerText: {
     fontSize: width * 0.08,
