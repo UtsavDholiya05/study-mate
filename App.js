@@ -22,6 +22,8 @@ import bottomtab from "./screens/bottomtab";
 import studymaterial from "./screens/studygroup";
 import CustomDrawer from "./screens/customDrawer";
 import studymaterialpage from "./screens/studymaterialpage";
+import Edushorts from "./screens/Edushorts"; 
+import ToDoList from "./screens/ToDoList";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -43,6 +45,8 @@ function MainStack() {
       <Stack.Screen name="studymaterial" component={studymaterial} />
       <Stack.Screen name="notes" component={require("./screens/notesScreen").default} />
       <Stack.Screen name="studymaterialpage" component={studymaterialpage} />
+      <Stack.Screen name="Edushorts" component={Edushorts} />
+      <Stack.Screen name="ToDoList" component={ToDoList} />
     </Stack.Navigator>
   );
 }
@@ -83,7 +87,7 @@ const App = () => {
         <Drawer.Screen name="login" component={LoginScreen} />
         <Drawer.Screen name="signup" component={SignupScreen} />
         <Drawer.Screen name="forgotpass" component={ForgotPass} />
-        <Drawer.Screen name="otpscreen" component={OtpScreen} />
+        <Drawer.Screen name="otpscreen" component={OtpScreen} />  
       </Drawer.Navigator>
     </NavigationContainer>
   );

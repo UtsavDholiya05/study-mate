@@ -504,37 +504,54 @@ const MeetingScreen = () => {
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-                padding: 20,
+                paddingHorizontal: 10,
               }}
             >
-              <View
+              {/* Join Button */}
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
                 style={{
-                  backgroundColor: "#9CA37C",
+                  backgroundColor: "#9CA37C", // Green color used for Rename button
                   borderRadius: 10,
-                  width: width * 0.2,
+                  width: width * 0.25,
+                  alignItems: "center",
+                  paddingVertical: 10,
                 }}
               >
-                <Button
-                  title="Join"
-                  color="#fff"
-                  onPress={() => setModalVisible(false)}
-                />
-              </View>
-              <View
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontFamily: "Inter_400Regular",
+                    fontSize: 16,
+                  }}
+                >
+                  Join
+                </Text>
+              </TouchableOpacity>
+
+              {/* Cancel Button */}
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
                 style={{
                   backgroundColor: "#fff",
                   borderRadius: 10,
-                  width: width * 0.2,
+                  width: width * 0.25,
                   borderColor: "#666",
                   borderWidth: 1,
+                  alignItems: "center",
+                  paddingVertical: 10,
                 }}
               >
-                <Button
-                  title="Cancel"
-                  color="#666"
-                  onPress={() => setModalVisible(false)}
-                />
-              </View>
+                <Text
+                  style={{
+                    color: "#000",
+                    fontFamily: "Inter_400Regular",
+                    fontSize: 16,
+                  }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

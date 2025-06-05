@@ -21,6 +21,8 @@ const CustomDrawer = ({ navigation }) => {
         <Ionicons name="person-circle" size={60} color="#f5f5dc" />
         <Text style={styles.username}>Welcome!</Text>
       </View>
+
+      {/* Search Input */}
       <TextInput
         style={styles.searchInput}
         value={search}
@@ -28,11 +30,13 @@ const CustomDrawer = ({ navigation }) => {
         placeholder="Search"
         placeholderTextColor="#f5f5dc"
       />
+
+      {/* Menu Container */}
       <View style={styles.menuContainer}>
         {/* Navigate to Home */}
         <TouchableOpacity
           style={styles.activeItem}
-          onPress={() => navigation.navigate("MainStack", { screen: "Homepage" })} // Navigate to homepage in MainStack
+          onPress={() => navigation.navigate("MainStack", { screen: "Homepage" })}
         >
           <Ionicons name="home" size={22} color="#111" style={{ marginRight: 8 }} />
           <Text style={styles.activeText}>Home</Text>
@@ -41,10 +45,19 @@ const CustomDrawer = ({ navigation }) => {
         {/* Navigate to Edit Profile Page */}
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate("MainStack", { screen: "editprofilepage" })} // Navigate to editprofilepage in MainStack
+          onPress={() => navigation.navigate("MainStack", { screen: "editprofilepage" })}
         >
           <Ionicons name="settings" size={22} color="#f5f5dc" style={{ marginRight: 8 }} />
           <Text style={styles.menuText}>Settings</Text>
+        </TouchableOpacity>
+
+        {/* To-Do Section */}
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("MainStack", { screen: "ToDoList" })}
+        >
+          <Ionicons name="checkmark-circle" size={22} color="#f5f5dc" style={{ marginRight: 8 }} />
+          <Text style={styles.menuText}>To-Do</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -86,6 +99,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 6,
     paddingHorizontal: 0,
+    marginHorizontal: 10, // Added marginHorizontal
     backgroundColor: "#222",
     borderRadius: 8,
   },

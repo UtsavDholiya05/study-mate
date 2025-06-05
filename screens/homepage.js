@@ -170,6 +170,7 @@ const Homepage = () => {
 
           {/* Card 2 - EduShorts */}
           <TouchableOpacity
+          onPress={() => navigation.navigate("Edushorts")} 
             style={{
               backgroundColor: "#FFFFF1",
               marginHorizontal: width * 0.02,
