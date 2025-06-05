@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TextInput,
   Modal,
   Button,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,8 +17,8 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import DateTimePicker from "@react-native-community/datetimepicker";
-// import { CalendarIcon, ClockIcon } from "lucide-react-native";
 import { format } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { height, width } = Dimensions.get("window");
 
@@ -30,6 +31,29 @@ const MeetingScreen = () => {
   const [userName, setUserName] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Scheduled calls state
+  const [scheduledCalls, setScheduledCalls] = useState([]);
+  // State for scheduling a new call
+  const [meetingTitle, setMeetingTitle] = useState("");
+
+  // Load scheduled calls from AsyncStorage on mount
+  useEffect(() => {
+    const loadScheduledCalls = async () => {
+      const stored = await AsyncStorage.getItem("scheduledCalls");
+      if (stored) setScheduledCalls(JSON.parse(stored));
+      else setScheduledCalls([
+        { id: 1, title: "AI Study Group Call", date: "2025-06-06 10:00 AM" },
+        { id: 2, title: "Web Dev Team Sync", date: "2025-06-07 3:00 PM" },
+      ]);
+    };
+    loadScheduledCalls();
+  }, []);
+
+  // Save scheduled calls to AsyncStorage whenever they change
+  useEffect(() => {
+    AsyncStorage.setItem("scheduledCalls", JSON.stringify(scheduledCalls));
+  }, [scheduledCalls]);
 
   const cardData = [
     {
@@ -81,6 +105,25 @@ const MeetingScreen = () => {
       backgroundColor: "#FFFFF1",
     },
   ];
+
+  // Add a new scheduled call
+  const scheduleMeeting = () => {
+    if (!meetingTitle.trim()) {
+      alert("Please enter a meeting name.");
+      return;
+    }
+    setScheduledCalls([
+      ...scheduledCalls,
+      {
+        id: Date.now(),
+        title: meetingTitle,
+        date: format(date, "dd MMM yyyy • hh:mm a"),
+      },
+    ]);
+    setScheduleModalVisible(false);
+    setMeetingTitle("");
+    setDate(new Date());
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#000" }}>
@@ -150,6 +193,7 @@ const MeetingScreen = () => {
           position: "relative",
           height: height * 0.18,
         }}
+        activeOpacity={1}
       >
         <TouchableOpacity
           onPress={() => {
@@ -264,9 +308,10 @@ const MeetingScreen = () => {
             shadowOpacity: 0.2,
             shadowRadius: 4,
             elevation: 5,
+            maxHeight: height * 0.35, // Make the section bigger and scrollable
           }}
         >
-          <View>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <Text
               style={{
                 fontSize: 28,
@@ -276,6 +321,17 @@ const MeetingScreen = () => {
             >
               Scheduled Calls
             </Text>
+            <TouchableOpacity
+              onPress={() => setScheduleModalVisible(true)}
+              style={{
+                backgroundColor: "#9CA37C",
+                paddingVertical: 6,
+                paddingHorizontal: 16,
+                borderRadius: 8,
+              }}
+            >
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>+ Schedule</Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -283,8 +339,36 @@ const MeetingScreen = () => {
               backgroundColor: "#000",
               marginTop: height * 0.002,
               width: "100%",
+              marginBottom: 10,
             }}
           />
+          {/* Scrollable scheduled calls */}
+          <ScrollView>
+            {scheduledCalls.length === 0 ? (
+              <Text style={{ color: "#888" }}>No scheduled calls.</Text>
+            ) : (
+              scheduledCalls.map((call) => (
+                <View
+                  key={call.id}
+                  style={{
+                    backgroundColor: "#e7e7d9",
+                    padding: width * 0.035,
+                    borderRadius: width * 0.02,
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: width * 0.045, fontWeight: "500" }}
+                  >
+                    {call.title}
+                  </Text>
+                  <Text style={{ fontSize: width * 0.035, color: "#555" }}>
+                    {call.date}
+                  </Text>
+                </View>
+              ))
+            )}
+          </ScrollView>
         </View>
       </View>
 
@@ -434,21 +518,10 @@ const MeetingScreen = () => {
             </Text>
 
             <TextInput
-              placeholder="Study Group"
-              placeholderTextColor="#999"
-              style={{
-                borderWidth: 1,
-                borderColor: "#ccc",
-                borderRadius: 12,
-                padding: 12,
-                marginBottom: 12,
-                fontFamily: "Inconsolata_400Regular",
-              }}
-            />
-
-            <TextInput
               placeholder="Meeting name"
               placeholderTextColor="#999"
+              value={meetingTitle}
+              onChangeText={setMeetingTitle}
               style={{
                 borderWidth: 1,
                 borderColor: "#ccc",
@@ -507,7 +580,7 @@ const MeetingScreen = () => {
               }}
             >
               <TouchableOpacity
-                onPress={() => setScheduleModalVisible(false)}
+                onPress={scheduleMeeting}
                 style={{
                   backgroundColor: "#9CA37C",
                   borderRadius: 12,
