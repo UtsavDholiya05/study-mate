@@ -97,10 +97,12 @@ const LoginScreen = ({ navigation }) => {
           await AsyncStorage.setItem("user", JSON.stringify(user));
 
           setLoading(false);
-          navigation.navigate("otpscreen", {
-            email: formData.email,
-            authToken: token,
-          });
+
+          // navigation.navigate("otpscreen", {
+          //   email: formData.email,
+          //   authToken: token,
+          // });
+          // Navigating to OTP screen without verification. Uncomment above lines to allow navigation without verification.
         } else {
           setLoading(false);
           const errorMessage =
@@ -327,6 +329,33 @@ const LoginScreen = ({ navigation }) => {
                     Login
                   </Text>
                 )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("otpscreen", {
+                    // email: formData.email,
+                    // authToken: "dummy-token",
+                  })
+                }
+                style={{
+                  backgroundColor: "#000",
+                  padding: 15,
+                  borderRadius: 40,
+                  alignItems: "center",
+                  width: "100%",
+                  marginVertical: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 18,
+                    fontFamily: "Inconsolata_400Regular",
+                  }}
+                >
+                  Go to OTP (No Verification)
+                </Text>
               </TouchableOpacity>
 
               <View
