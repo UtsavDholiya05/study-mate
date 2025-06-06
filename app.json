@@ -26,6 +26,9 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "YT_API_KEY": "AIzaSyAc_E3HASG2hDK8rLZrfOSZeRu-EiBpYfQ"
+    }
   }
 }

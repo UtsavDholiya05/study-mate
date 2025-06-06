@@ -11,11 +11,11 @@ import {
   Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { YT_API_KEY } from "@env"; // Import from .env
+import Constants from "expo-constants";
 
 const { width, height } = Dimensions.get("window");
 
-const API_KEY = YT_API_KEY; // Use the imported key
+const API_KEY = Constants.expoConfig.extra.YT_API_KEY;
 
 const Edushorts = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
