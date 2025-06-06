@@ -19,7 +19,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "INTERNET",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "INTERNET"
+      ],
+      "package": "com.utsavdholiya05.studymate"
     },
     "web": {
       "favicon": "./assets/favicon.png"

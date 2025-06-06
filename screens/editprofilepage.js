@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -157,12 +158,12 @@ const EditProfilePage = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("profilepage")}>
-          <Ionicons
-            style={{ transform: [{ translateY: 23 }] }}
-            name="arrow-back"
-            size={width * 0.11}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
             color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
           />
         </TouchableOpacity>
 
@@ -181,7 +182,7 @@ const EditProfilePage = () => {
               fontWeight: "500",
             }}
           >
-            Edit Profile
+            StudyMate
           </Text>
         </View>
       </View>

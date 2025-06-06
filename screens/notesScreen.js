@@ -139,14 +139,12 @@ const notesScreen = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        >
-          <Ionicons
-            style={{ transform: [{ translateY: width * 0.06 }] }}
-            name="menu"
-            size={width * 0.11}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
             color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
           />
         </TouchableOpacity>
 

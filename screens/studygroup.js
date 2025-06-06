@@ -50,11 +50,45 @@ export default function App() {
       <StatusBar backgroundColor="#000" barStyle="light-content" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.menuIconContainer}>
-          <Text style={styles.menuIcon}>☰</Text>
+      <View
+        style={{
+          backgroundColor: "#000",
+          paddingVertical: width * 0.09,
+          paddingHorizontal: width * 0.05,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#fff",
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
+            color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
+          />
+        </TouchableOpacity>
+
+        <View
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: [{ translateX: -width * 0.13 }, { translateY: 20 }],
+          }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+              fontFamily: "PlayfairDisplay_400Regular",
+              fontSize: width * 0.08,
+              fontWeight: "500",
+            }}
+          >
+            StudyMate
+          </Text>
         </View>
-        <Text style={styles.headerText}>StudySmart</Text>
       </View>
 
       {/* Search Input */}

@@ -17,7 +17,7 @@ import { Ionicons, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 const { height, width } = Dimensions.get("window");
 
 const MyGroups = () => {
@@ -108,14 +108,12 @@ const MyGroups = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        >
-          <Ionicons
-            style={{ transform: [{ translateY: width * 0.06 }] }}
-            name="menu"
-            size={width * 0.11}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
             color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
           />
         </TouchableOpacity>
 

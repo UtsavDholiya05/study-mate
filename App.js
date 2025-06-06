@@ -33,9 +33,10 @@ SplashScreen.preventAutoHideAsync();
 
 function MainStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="loginscreen">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="homepage">
       <Stack.Screen name="loginscreen" component={LoginScreen} />
       <Stack.Screen name="homepage" component={Homepage} />
+      <Stack.Screen name ="otpscreen" component={OtpScreen} />
       <Stack.Screen name="profilepage" component={profilepage} />
       <Stack.Screen name="mygroups" component={mygroups} />
       <Stack.Screen name="notificationpage" component={notificationpage} />

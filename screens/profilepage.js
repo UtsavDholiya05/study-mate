@@ -12,6 +12,7 @@ import {
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -91,12 +92,12 @@ const ProfilePage = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity onPress={() => console.log("Menu Clicked")}>
-          <Ionicons
-            style={{ transform: [{ translateY: 23 }] }}
-            name="menu"
-            size={width * 0.11}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
             color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
           />
         </TouchableOpacity>
 

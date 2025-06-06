@@ -9,9 +9,11 @@ import {
   StyleSheet,
   Dimensions,
   Linking,
+  StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -71,13 +73,52 @@ const Edushorts = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: "#000" }}>
+          <StatusBar
+            translucent
+            backgroundColor="transparent"
+            barStyle="light-content"
+          />
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={width * 0.08} color="#fff" />
+      <View
+        style={{
+          backgroundColor: "#000",
+          paddingVertical: width * 0.09,
+          paddingHorizontal: width * 0.05,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#fff",
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
+            color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerText}>EduShorts</Text>
+
+        <View
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: [{ translateX: -width * 0.13 }, { translateY: 20 }],
+          }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+              fontFamily: "PlayfairDisplay_400Regular",
+              fontSize: width * 0.08,
+              fontWeight: "500",
+            }}
+          >
+            StudyMate
+          </Text>
+        </View>
       </View>
 
       {/* Search Section */}
