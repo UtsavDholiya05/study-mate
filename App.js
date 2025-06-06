@@ -19,11 +19,12 @@ import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display"
 import { Inter_400Regular } from "@expo-google-fonts/inter";
 import MeetingScreen from "./screens/Meeting/MeetingScreen";
 import bottomtab from "./screens/bottomtab";
-import studymaterial from "./screens/studygroup";
+// import studymaterial from "./screens/studygroup";
 import CustomDrawer from "./screens/customDrawer";
 import studymaterialpage from "./screens/studymaterialpage";
 import Edushorts from "./screens/Edushorts"; 
 import ToDoList from "./screens/ToDoList";
+import FolderDetailScreen from "./screens/FolderDetailScreen";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -43,11 +44,12 @@ function MainStack() {
       <Stack.Screen name="editprofilepage" component={EditProfilePage} />
       <Stack.Screen name="meetingscreen" component={MeetingScreen} />
       <Stack.Screen name="bottomtab" component={bottomtab} />
-      <Stack.Screen name="studymaterial" component={studymaterial} />
+      {/* <Stack.Screen name="studymaterial" component={studymaterial} /> */}
       <Stack.Screen name="notes" component={require("./screens/notesScreen").default} />
-      <Stack.Screen name="studymaterialpage" component={studymaterialpage} />
+      <Stack.Screen name="smp" component={studymaterialpage} />
       <Stack.Screen name="Edushorts" component={Edushorts} />
       <Stack.Screen name="ToDoList" component={ToDoList} />
+      <Stack.Screen name="FolderDetail" component={FolderDetailScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

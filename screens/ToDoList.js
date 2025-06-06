@@ -67,7 +67,7 @@ const ToDoPage = () => {
 
   const renderTask = ({ item }) => (
     <View style={styles.taskContainer}>
-      <View style={styles.circleIcon}></View> {/* Round symbol */}
+      <View style={styles.circleIcon} />
       <TouchableOpacity
         onPress={() => toggleTaskCompletion(item.id)}
         style={[
@@ -75,7 +75,7 @@ const ToDoPage = () => {
           item.completed && styles.completedTask,
         ]}
       >
-        <Text style={styles.taskText}>{item.text}</Text> {/* Wrap task.text in <Text> */}
+        <Text style={styles.taskText}>{item.text}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => deleteTask(item.id)}>
         <Ionicons name="trash" size={24} color="#f5f5dc" />

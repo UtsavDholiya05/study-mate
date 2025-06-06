@@ -4,298 +4,383 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Dimensions,
   FlatList,
-  Alert,
   Modal,
+  Alert,
+  Dimensions,
+  Keyboard,
 } from "react-native";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
+import Constants from "expo-constants"; // <-- Add this import
 
 const { width } = Dimensions.get("window");
 
 const StudyMaterialPage = () => {
-  const navigation = useNavigation();
-  const [subjects, setSubjects] = useState([]);
+  const [folders, setFolders] = useState([]);
+  const [folderInput, setFolderInput] = useState("");
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [notes, setNotes] = useState([]);
+  const [noteInput, setNoteInput] = useState("");
+  const [editIdx, setEditIdx] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [subjectName, setSubjectName] = useState("");
-  const [renameSubjectId, setRenameSubjectId] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [folderModal, setFolderModal] = useState(false);
 
+  // Load folders and notes from storage
   useEffect(() => {
-    const loadSubjects = async () => {
-      const storedSubjects = await AsyncStorage.getItem("subjects");
-      if (storedSubjects) setSubjects(JSON.parse(storedSubjects));
+    const loadData = async () => {
+      const storedFolders = await AsyncStorage.getItem("folders");
+      if (storedFolders) setFolders(JSON.parse(storedFolders));
     };
-    loadSubjects();
+    loadData();
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem("subjects", JSON.stringify(subjects));
-  }, [subjects]);
+    AsyncStorage.setItem("folders", JSON.stringify(folders));
+  }, [folders]);
 
-  const addSubject = () => {
-    if (subjectName.trim()) {
-      const newSubject = { id: Date.now(), name: subjectName.trim() };
-      setSubjects([...subjects, newSubject]);
-      setSubjectName("");
-      setModalVisible(false);
-    } else Alert.alert("Error", "Subject name cannot be empty.");
-  };
+  // When folder changes, load its notes
+  useEffect(() => {
+    if (selectedFolder) {
+      setNotes(selectedFolder.notes || []);
+    }
+  }, [selectedFolder]);
 
-  const renameSubject = () => {
-    if (subjectName.trim()) {
-      setSubjects(
-        subjects.map((subject) =>
-          subject.id === renameSubjectId
-            ? { ...subject, name: subjectName.trim() }
-            : subject
+  // Save notes to the selected folder
+  useEffect(() => {
+    if (selectedFolder) {
+      setFolders((prev) =>
+        prev.map((f) =>
+          f.id === selectedFolder.id ? { ...f, notes } : f
         )
       );
-      setSubjectName("");
-      setRenameSubjectId(null);
-      setModalVisible(false);
-    } else Alert.alert("Error", "Subject name cannot be empty.");
+    }
+  }, [notes]);
+
+  // Folder CRUD
+  const addFolder = () => {
+    if (folderInput.trim()) {
+      setFolders([{ name: folderInput.trim(), id: Date.now(), notes: [] }, ...folders]);
+      setFolderInput("");
+      setFolderModal(false);
+    }
   };
 
-  const deleteSubject = (id) => {
-    Alert.alert("Delete Subject", "Are you sure?", [
+  const deleteFolder = (id) => {
+    Alert.alert("Delete Folder", "Are you sure?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
         style: "destructive",
-        onPress: () => setSubjects(subjects.filter((subject) => subject.id !== id)),
+        onPress: () => {
+          setFolders(folders.filter((f) => f.id !== id));
+          if (selectedFolder && selectedFolder.id === id) setSelectedFolder(null);
+        },
       },
     ]);
   };
 
-  const filteredSubjects = subjects.filter((subject) =>
-    subject.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Notes CRUD
+  const addNote = () => {
+    if (noteInput.trim()) {
+      setNotes([{ text: noteInput.trim(), id: Date.now() }, ...notes]);
+      setNoteInput("");
+      Keyboard.dismiss();
+    }
+  };
 
-  const SUBJECT_SIZE = (width - 2 * 20 - 2 * (width * 0.02) - 16) / 2; // fits inside container
+  const startEdit = (idx) => {
+    setEditIdx(idx);
+    setNoteInput(notes[idx].text);
+    setModalVisible(true);
+  };
 
-  const renderSubject = ({ item }) => (
-    <View
+  const saveEdit = () => {
+    if (noteInput.trim()) {
+      const updated = [...notes];
+      updated[editIdx].text = noteInput.trim();
+      setNotes(updated);
+      setEditIdx(null);
+      setNoteInput("");
+      setModalVisible(false);
+      Keyboard.dismiss();
+    }
+  };
+
+  const deleteNote = (idx) => {
+    Alert.alert("Delete Note", "Are you sure?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => setNotes(notes.filter((_, i) => i !== idx)),
+      },
+    ]);
+  };
+
+  // Folder List UI
+  const renderFolder = ({ item }) => (
+    <TouchableOpacity
       style={{
-        backgroundColor: "#FFD700",
-        width: SUBJECT_SIZE,
-        height: SUBJECT_SIZE,
-        borderRadius: 15,
-        margin: 5, // smaller margin
-        justifyContent: "center",
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 16,
+        marginVertical: 6,
+        marginHorizontal: 10,
+        flexDirection: "row",
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 5,
-        position: "relative",
+        elevation: 2,
+        justifyContent: "space-between",
       }}
+      onPress={() => setSelectedFolder(item)}
     >
-      <TouchableOpacity
-        style={{ position: "absolute", top: 8, left: 8 }}
-        onPress={() => {
-          setModalVisible(true);
-          setRenameSubjectId(item.id);
-          setSubjectName(item.name);
-        }}
-      >
-        <MaterialIcons name="edit" size={22} color="blue" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{ position: "absolute", top: 8, right: 8 }}
-        onPress={() => deleteSubject(item.id)}
-      >
+      <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+        <MaterialIcons name="folder" size={28} color="#9CA37C" style={{ marginRight: 10 }} />
+        <Text style={{ fontSize: 18, flex: 1 }}>{item.name}</Text>
+      </View>
+      <TouchableOpacity onPress={() => deleteFolder(item.id)}>
         <MaterialIcons name="delete" size={22} color="red" />
       </TouchableOpacity>
-      <MaterialIcons name="menu-book" size={SUBJECT_SIZE * 0.3} color="#000" />
-      <Text
-        style={{
-          fontSize: SUBJECT_SIZE * 0.12,
-          color: "#000",
-          textAlign: "center",
-          marginTop: 5,
-        }}
-        numberOfLines={2}
-      >
-        {item.name}
-      </Text>
+    </TouchableOpacity>
+  );
+
+  // Notes List UI
+  const renderItem = ({ item, index }) => (
+    <View
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 16,
+        marginVertical: 6,
+        marginHorizontal: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        elevation: 2,
+      }}
+    >
+      <Text style={{ flex: 1, fontSize: 16 }}>{item.text}</Text>
+      <TouchableOpacity onPress={() => startEdit(index)} style={{ marginRight: 10 }}>
+        <MaterialIcons name="edit" size={22} color="#4A90E2" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => deleteNote(index)}>
+        <MaterialIcons name="delete" size={22} color="red" />
+      </TouchableOpacity>
     </View>
   );
 
+  // Main UI
   return (
-    <View style={{ flex: 1, backgroundColor: "#000" }}>
+    <View style={{ flex: 1, backgroundColor: "#FFFFF1" }}>
       {/* Header */}
       <View
         style={{
           backgroundColor: "#000",
+          paddingTop: Constants.statusBarHeight || 40, // <-- Add this line
           paddingVertical: width * 0.09,
           paddingHorizontal: width * 0.05,
-          flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
           borderBottomWidth: 0.5,
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons
-            name="arrow-back-ios"
-            size={width * 0.09}
-            color="#9CA37C"
-            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
-          />
-        </TouchableOpacity>
-
-        <View
+        <Text
           style={{
-            position: "absolute",
-            left: "50%",
-            transform: [{ translateX: -width * 0.13 }, { translateY: 20 }],
+            color: "#fff",
+            fontSize: width * 0.08,
+            fontWeight: "500",
+            textAlign: "center",
           }}
         >
-          <Text
+          {selectedFolder ? selectedFolder.name : "Folders"}
+        </Text>
+      </View>
+
+      {/* Folders List */}
+      {!selectedFolder && (
+        <>
+          <TouchableOpacity
             style={{
-              color: "#fff",
-              fontFamily: "PlayfairDisplay_400Regular",
-              fontSize: width * 0.08,
-              fontWeight: "500",
+              margin: 16,
+              backgroundColor: "#9CA37C",
+              padding: 14,
+              borderRadius: 10,
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+            onPress={() => setFolderModal(true)}
+          >
+            <MaterialIcons name="create-new-folder" size={24} color="#fff" />
+            <Text style={{ color: "#fff", fontSize: 16, marginLeft: 8 }}>Add Folder</Text>
+          </TouchableOpacity>
+          <FlatList
+            data={folders}
+            renderItem={renderFolder}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ paddingVertical: 16 }}
+            ListEmptyComponent={
+              <Text style={{ textAlign: "center", color: "#888", marginTop: 40 }}>
+                No folders yet. Add your first folder!
+              </Text>
+            }
+          />
+        </>
+      )}
+
+      {/* Notes List */}
+      {selectedFolder && (
+        <>
+          {/* Back Button */}
+          <TouchableOpacity
+            style={{
+              margin: 16,
+              backgroundColor: "#E0E0E0",
+              padding: 10,
+              borderRadius: 10,
+              alignItems: "center",
+              flexDirection: "row",
+              width: 100,
+            }}
+            onPress={() => setSelectedFolder(null)}
+          >
+            <MaterialIcons name="arrow-back" size={20} color="#000" />
+            <Text style={{ color: "#000", fontSize: 16, marginLeft: 6 }}>Back</Text>
+          </TouchableOpacity>
+
+          {/* Input */}
+          <View
+            style={{
+              flexDirection: "row",
+              margin: 16,
+              marginBottom: 0,
+              alignItems: "center",
             }}
           >
-            StudyMate
-          </Text>
-        </View>
-      </View>
+            <TextInput
+              placeholder="Add a note..."
+              value={noteInput}
+              onChangeText={setNoteInput}
+              style={{
+                flex: 1,
+                backgroundColor: "#fff",
+                borderRadius: 10,
+                padding: 12,
+                fontSize: 16,
+                borderWidth: 1,
+                borderColor: "#ccc",
+              }}
+              onSubmitEditing={editIdx !== null ? saveEdit : addNote}
+            />
+            <TouchableOpacity
+              onPress={editIdx !== null ? saveEdit : addNote}
+              style={{
+                marginLeft: 10,
+                backgroundColor: "#9CA37C",
+                padding: 12,
+                borderRadius: 10,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MaterialIcons name={editIdx !== null ? "save" : "add"} size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
 
-      {/* Search & Title */}
-      <View
-        style={{
-          backgroundColor: "#FFFFF1",
-          marginHorizontal: width * 0.02,
-          marginTop: 10,
-          padding: 20,
-          borderRadius: 10,
-        }}
-      >
-        <TextInput
-          placeholder="Search Subject"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: 10,
-            padding: 10,
-            fontSize: width * 0.04,
-            borderWidth: 1,
-            borderColor: "#ccc",
-            marginBottom: 15,
-          }}
-        />
-        <Text
-          style={{
-            color: "#000",
-            fontSize: width * 0.08,
-            fontWeight: "bold",
-            fontFamily: "PlayfairDisplay_400Regular",
-            marginBottom: 5,
-          }}
-        >
-          Subjects
-        </Text>
-        <Text
-          style={{
-            color: "#000",
-            fontSize: width * 0.04,
-            fontFamily: "Inter_400Regular",
-          }}
-        >
-          Manage your study subjects
-        </Text>
-      </View>
+          {/* Notes List */}
+          <FlatList
+            data={notes}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
+            contentContainerStyle={{ paddingVertical: 16 }}
+            ListEmptyComponent={
+              <Text style={{ textAlign: "center", color: "#888", marginTop: 40 }}>
+                No notes yet. Add your first note!
+              </Text>
+            }
+          />
 
-      {/* Subject Grid */}
-      <View
-        style={{
-          backgroundColor: "#FFFFF1",
-          margin: width * 0.02,
-          padding: 20,
-          borderRadius: 10,
-          flex: 1,
-        }}
-      >
-        <Text
-          style={{
-            color: "#000",
-            fontSize: width * 0.05,
-            fontWeight: "bold",
-            marginBottom: 10,
-          }}
-        >
-          All Subjects
-        </Text>
+          {/* Edit Modal */}
+          <Modal visible={modalVisible} transparent animationType="slide">
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.4)",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  paddingTop: Constants.statusBarHeight || 40, // <-- Add this line if you want
+                  padding: 20,
+                  borderRadius: 15,
+                  width: "80%",
+                }}
+              >
+                <TextInput
+                  placeholder="Edit note"
+                  value={noteInput}
+                  onChangeText={setNoteInput}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#ccc",
+                    borderRadius: 10,
+                    padding: 10,
+                    marginBottom: 20,
+                  }}
+                  onSubmitEditing={saveEdit}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#9CA37C",
+                    padding: 10,
+                    borderRadius: 10,
+                    alignItems: "center",
+                  }}
+                  onPress={saveEdit}
+                >
+                  <Text style={{ color: "#fff", fontWeight: "bold" }}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ marginTop: 10, alignItems: "center" }}
+                  onPress={() => {
+                    setModalVisible(false);
+                    setEditIdx(null);
+                    setNoteInput("");
+                  }}
+                >
+                  <Text style={{ color: "red" }}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </>
+      )}
 
-        {/* Add Button */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#E0E0E0",
-            padding: 12,
-            borderRadius: 10,
-            marginBottom: 10,
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-          onPress={() => {
-            setModalVisible(true);
-            setRenameSubjectId(null);
-          }}
-        >
-          <MaterialIcons name="add" size={24} color="#000" />
-          <Text style={{ fontSize: 16, color: "#000", marginLeft: 6 }}>
-            Add Subject
-          </Text>
-        </TouchableOpacity>
-
-        {/* Subject Grid */}
-        <FlatList
-          data={filteredSubjects}
-          renderItem={renderSubject}
-          keyExtractor={(item) => item.id.toString()}
-          numColumns={2}
-          contentContainerStyle={{
-            paddingBottom: 30,
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-          columnWrapperStyle={{
-            justifyContent: "space-between",
-          }}
-        />
-      </View>
-
-      {/* Modal */}
-      <Modal visible={modalVisible} transparent animationType="slide">
+      {/* Folder Modal */}
+      <Modal visible={folderModal} transparent animationType="slide">
         <View
           style={{
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
+            backgroundColor: "rgba(0,0,0,0.4)",
           }}
         >
           <View
             style={{
               backgroundColor: "#fff",
+              paddingTop: Constants.statusBarHeight || 40, // <-- Add this line if you want
               padding: 20,
               borderRadius: 15,
               width: "80%",
             }}
           >
             <TextInput
-              placeholder="Enter Subject Name"
-              value={subjectName}
-              onChangeText={setSubjectName}
+              placeholder="Folder name"
+              value={folderInput}
+              onChangeText={setFolderInput}
               style={{
                 borderWidth: 1,
                 borderColor: "#ccc",
@@ -303,6 +388,7 @@ const StudyMaterialPage = () => {
                 padding: 10,
                 marginBottom: 20,
               }}
+              onSubmitEditing={addFolder}
             />
             <TouchableOpacity
               style={{
@@ -311,18 +397,15 @@ const StudyMaterialPage = () => {
                 borderRadius: 10,
                 alignItems: "center",
               }}
-              onPress={renameSubjectId ? renameSubject : addSubject}
+              onPress={addFolder}
             >
-              <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                {renameSubjectId ? "Rename Subject" : "Add Subject"}
-              </Text>
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>Add Folder</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginTop: 10, alignItems: "center" }}
               onPress={() => {
-                setModalVisible(false);
-                setSubjectName("");
-                setRenameSubjectId(null);
+                setFolderModal(false);
+                setFolderInput("");
               }}
             >
               <Text style={{ color: "red" }}>Cancel</Text>

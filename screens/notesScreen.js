@@ -9,9 +9,9 @@ import {
   Alert,
   Modal,
 } from "react-native";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
@@ -27,6 +27,10 @@ const notesScreen = () => {
     const loadFolders = async () => {
       const storedFolders = await AsyncStorage.getItem("folders");
       if (storedFolders) setFolders(JSON.parse(storedFolders));
+      else setFolders([
+        { id: 1, name: "Maths", files: [], notes: [] },
+        { id: 2, name: "Chemistry", files: [], notes: [] },
+      ]);
     };
     loadFolders();
   }, []);
@@ -37,7 +41,7 @@ const notesScreen = () => {
 
   const addFolder = () => {
     if (folderName.trim()) {
-      const newFolder = { id: Date.now(), name: folderName.trim() };
+      const newFolder = { id: Date.now(), name: folderName.trim(), files: [], notes: [] };
       setFolders([...folders, newFolder]);
       setFolderName("");
       setModalVisible(false);
@@ -65,7 +69,9 @@ const notesScreen = () => {
       {
         text: "Delete",
         style: "destructive",
-        onPress: () => setFolders(folders.filter((folder) => folder.id !== id)),
+        onPress: () => {
+          setFolders(folders.filter((folder) => folder.id !== id));
+        },
       },
     ]);
   };
@@ -74,7 +80,7 @@ const notesScreen = () => {
     folder.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const FOLDER_SIZE = (width - 2 * 20 - 2 * (width * 0.02) - 16) / 2; // fits inside container
+  const FOLDER_SIZE = (width - 2 * 20 - 2 * (width * 0.02) - 16) / 2;
 
   const renderFolder = ({ item }) => (
     <View
@@ -83,7 +89,7 @@ const notesScreen = () => {
         width: FOLDER_SIZE,
         height: FOLDER_SIZE,
         borderRadius: 15,
-        margin: 5, // smaller margin
+        margin: 5,
         justifyContent: "center",
         alignItems: "center",
         shadowColor: "#000",
@@ -109,18 +115,29 @@ const notesScreen = () => {
       >
         <MaterialIcons name="delete" size={22} color="red" />
       </TouchableOpacity>
-      <MaterialIcons name="folder" size={FOLDER_SIZE * 0.3} color="#000" />
-      <Text
-        style={{
-          fontSize: FOLDER_SIZE * 0.12,
-          color: "#000",
-          textAlign: "center",
-          marginTop: 5,
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("FolderDetail", {
+            folder: item,
+            updateFolder: (updatedFolder) => {
+              setFolders(folders.map(f => f.id === updatedFolder.id ? updatedFolder : f));
+            }
+          });
         }}
-        numberOfLines={2}
       >
-        {item.name}
-      </Text>
+        <MaterialIcons name="folder" size={FOLDER_SIZE * 0.3} color="#000" />
+        <Text
+          style={{
+            fontSize: FOLDER_SIZE * 0.12,
+            color: "#000",
+            textAlign: "center",
+            marginTop: 5,
+          }}
+          numberOfLines={2}
+        >
+          {item.name}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
