@@ -102,7 +102,7 @@ const SignupScreen = ({ navigation }) => {
         console.log("Backend Response Data:", responseData);
 
         if (response.ok) {
-          navigation.navigate("otp", { email: formData.email });
+          navigation.navigate("otpScreen", { email: formData.email });
         } else {
           alert(responseData.message || "Signup failed");
         }

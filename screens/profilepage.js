@@ -17,7 +17,7 @@ const { height, width } = Dimensions.get("window");
 
 const ProfilePage = () => {
   const navigation = useNavigation();
-  const isFocused = useIsFocused(); 
+  const isFocused = useIsFocused();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -75,8 +75,12 @@ const ProfilePage = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+    <View style={{ flex: 1, backgroundColor: "black" }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
 
       {/* Header */}
       <View
@@ -91,13 +95,10 @@ const ProfilePage = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity onPress={() => console.log("Menu Clicked")}>
-          <Ionicons
-            style={{ transform: [{ translateY: 23 }] }}
-            name="menu"
-            size={width * 0.11}
-            color="#9CA37C"
-          />
+        <TouchableOpacity
+          style={{ transform: [{ translateY: width * 0.06 }] }}
+        >
+          <Ionicons name="menu" size={width * 0.11} color="#9CA37C" />
         </TouchableOpacity>
 
         <View
@@ -123,7 +124,7 @@ const ProfilePage = () => {
       {/* Banner */}
       <View
         style={{
-          height: height * 0.20,
+          height: height * 0.2,
           backgroundColor: "#b5b88f",
           width: "100%",
           borderColor: "black",
@@ -162,7 +163,9 @@ const ProfilePage = () => {
           >
             <Image
               source={{
-                uri: userData?.profileImage || "https://randomuser.me/api/portraits/women/44.jpg",
+                uri:
+                  userData?.profileImage ||
+                  "https://randomuser.me/api/portraits/women/44.jpg",
               }}
               style={{
                 width: width * 0.21,
@@ -236,7 +239,7 @@ const ProfilePage = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

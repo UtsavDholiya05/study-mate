@@ -141,7 +141,7 @@ const EditProfilePage = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+    <View style={{ flex: 1, backgroundColor: "black" }}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
 
       {/* Header */}
@@ -161,7 +161,7 @@ const EditProfilePage = () => {
           <Ionicons
             style={{ transform: [{ translateY: 23 }] }}
             name="arrow-back"
-            size={width * 0.11}
+            size={width * 0.09}
             color="#9CA37C"
           />
         </TouchableOpacity>
@@ -303,7 +303,7 @@ const EditProfilePage = () => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

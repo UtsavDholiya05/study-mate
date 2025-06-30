@@ -8,7 +8,7 @@ import { Inconsolata_400Regular } from "@expo-google-fonts/inconsolata";
 import LoginScreen from "./screens/loginscreen";
 import SignupScreen from "./screens/signupscreen";
 import ForgotPass from "./screens/forgotpass";
-import OtpScreen from "./screens/otpscreen";
+import Otpscreen from "./screens/otpscreen";
 import homepage from "./screens/homepage";
 import profilepage from "./screens/profilepage"
 import mygroups from "./screens/mygroups"
@@ -42,11 +42,10 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="studymaterial">
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="signup" component={SignupScreen} />
         <Stack.Screen name="forgotpass" component={ForgotPass} />
-        <Stack.Screen name="otpscreen" component={OtpScreen} />
+        <Stack.Screen name="otpScreen" component={Otpscreen} />
         <Stack.Screen name="homepage" component={homepage} />
         <Stack.Screen name="profilepage" component={profilepage} />
         <Stack.Screen name="mygroups" component={mygroups} />
