@@ -82,7 +82,7 @@ const ForgotPass = ({ navigation }) => {
             alignItems: "center",
             width: "100%",
           }}
-          onPress={() => navigation.navigate("Otp")}
+          onPress={() => navigation.navigate("otpscreen")}
         >
           <Text style={{ color: "white", fontSize: 18, fontFamily: "Inconsolata_400Regular" }}>Send Code</Text>
         </TouchableOpacity>

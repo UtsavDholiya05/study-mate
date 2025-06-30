@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window"); // Get device width
 
@@ -36,11 +36,13 @@ const Homepage = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity
-          style={{ transform: [{ translateY: width * 0.06 }] }}
-          onPress={() => console.log("Menu Clicked")}
-        >
-          <Ionicons name="menu" size={width * 0.11} color="#9CA37C" />
+        <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+          <Ionicons
+            style={{ transform: [{ translateY: width * 0.06 }] }}
+            name="menu"
+            size={width * 0.11}
+            color="#9CA37C"
+          />
         </TouchableOpacity>
 
         <View
@@ -168,6 +170,7 @@ const Homepage = () => {
 
           {/* Card 2 - EduShorts */}
           <TouchableOpacity
+          onPress={() => navigation.navigate("Edushorts")} 
             style={{
               backgroundColor: "#FFFFF1",
               marginHorizontal: width * 0.02,
@@ -253,6 +256,7 @@ const Homepage = () => {
               elevation: 5,
               justifyContent: "space-between",
             }}
+            onPress={() => navigation.navigate("smp")} // Navigate to studygroup
           >
             <Ionicons name="document-text" size={width * 0.1} color="#000" />
             <Text
@@ -284,6 +288,7 @@ const Homepage = () => {
             height: height * 0.17,
             justifyContent: "space-between",
           }}
+          onPress={() => navigation.navigate("notes")} // <-- Add this linez
         >
           <FontAwesome5 name="book" size={width * 0.1} color="black" />
           <View>

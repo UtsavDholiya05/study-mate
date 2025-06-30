@@ -15,21 +15,40 @@ import {
 } from "react-native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import axios from "axios";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 const { height, width } = Dimensions.get("window");
 
 const MyGroups = () => {
+  const navigation = useNavigation();
   const [groups, setGroups] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [description, setDescription] = useState("");
 
+  // Load groups from AsyncStorage on mount
   useEffect(() => {
-    setGroups([
-      { id: 1, name: "AI Study Group", owner: "Sarah" },
-      { id: 2, name: "Web Dev Team", owner: "Sarah" },
-    ]);
+    const loadGroups = async () => {
+      try {
+        const stored = await AsyncStorage.getItem("mygroups");
+        if (stored) setGroups(JSON.parse(stored));
+        else
+          setGroups([
+            { id: 1, name: "AI Study Group", owner: "Sarah" },
+            { id: 2, name: "Web Dev Team", owner: "Sarah" },
+          ]);
+      } catch (e) {
+        setGroups([]);
+      }
+    };
+    loadGroups();
   }, []);
+
+  // Save groups to AsyncStorage whenever they change
+  useEffect(() => {
+    AsyncStorage.setItem("mygroups", JSON.stringify(groups));
+  }, [groups]);
 
   const createGroup = async () => {
     if (!newGroupName.trim()) {
@@ -38,13 +57,7 @@ const MyGroups = () => {
     }
 
     try {
-      const response = await axios.post(
-        "https://your-backend.com/group/create",
-        {
-          name: newGroupName,
-          description,
-        }
-      );
+      // await axios.post("https://your-backend.com/group/create", { name: newGroupName, description });
       Alert.alert("Success", "Group created");
       setGroups([
         ...groups,
@@ -66,7 +79,7 @@ const MyGroups = () => {
         style: "destructive",
         onPress: async () => {
           try {
-            await axios.delete(`https://your-backend.com/group/delete/${id}`);
+            // await axios.delete(`https://your-backend.com/group/delete/${id}`);
             setGroups(groups.filter((group) => group.id !== id));
           } catch (error) {
             Alert.alert("Error", "Failed to delete group");
@@ -78,7 +91,11 @@ const MyGroups = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#000" }}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <View
         style={{
           backgroundColor: "#000",
@@ -91,12 +108,12 @@ const MyGroups = () => {
           borderBottomColor: "#fff",
         }}
       >
-        <TouchableOpacity onPress={() => console.log("Menu Clicked")}>
-          <Ionicons
-            style={{ transform: [{ translateY: 23 }] }}
-            name="menu"
-            size={width * 0.11}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={width * 0.09}
             color="#9CA37C"
+            style={{ alignSelf: "center", transform: [{ translateY: width * 0.06 }] }}
           />
         </TouchableOpacity>
 

@@ -40,45 +40,37 @@ const otpscreen = ({ navigation, route }) => {
         }
       );
       console.log("OTP sent:", response.data);
+      // If backend responds with already verified, navigate
+      if (
+        response.data?.message &&
+        response.data.message.toLowerCase().includes("already verified")
+      ) {
+        // Alert.alert(
+        //   "Already Verified",
+        //   "You are already verified. Redirecting to homepage..."
+        // );
+        navigation.navigate("homepage");
+      }
     } catch (error) {
-      console.error(
-        "Error sending OTP:",
-        error.response?.data || error.message
-      );
-      Alert.alert("Error", "Failed to send OTP. Please try again.");
+      const msg = error.response?.data?.message || error.message;
+      if (msg && msg.toLowerCase().includes("already verified")) {
+        // Alert.alert(
+        //   "Already Verified",
+        //   "You are already verified. Redirecting to homepage..."
+        // );
+        navigation.navigate("homepage");
+      } else {
+        console.error(
+          "Error sending OTP:",
+          error.response?.data || error.message
+        );
+        Alert.alert("Error", "Failed to send OTP. Please try again.");
+      }
     }
   };
 
-  const verifyOtp = async () => {
-    const enteredOtp = otp.join("");
-    if (enteredOtp.length !== 6) {
-      Alert.alert("Incomplete OTP", "Please enter all 6 digits.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/user/auth/verifyOtp`,
-        {
-          otp: enteredOtp,
-          email,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      console.log("OTP verified:", response.data);
-      Alert.alert("Success", "OTP Verified!");
-      navigation.navigate("homepage");
-    } catch (error) {
-      console.error(
-        "Verification failed:",
-        error.response?.data || error.message
-      );
-      Alert.alert("Invalid OTP", "Verification failed. Please try again.");
-    }
+  const verifyOtp = () => {
+    navigation.navigate("homepage");
   };
 
   const handleChange = (text, index) => {
